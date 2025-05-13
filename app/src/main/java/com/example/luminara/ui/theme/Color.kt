@@ -16,3 +16,4 @@ val OnSecondaryContainer = Color(0xFF1D192B)
 // Tertiary, Background
 val DarkText = Color(0xFF121212)
 var BlueText = Color(0xFF1E4AE9)
+var FillTextfield = Color(0xFFF7FBFF)
