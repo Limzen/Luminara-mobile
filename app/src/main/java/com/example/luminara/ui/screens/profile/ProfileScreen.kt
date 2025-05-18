@@ -7,9 +7,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
@@ -89,10 +89,10 @@ fun ProfileScreen() {
 
 
 
-        ProfileMenuItem(icon = Icons.Default.Person, text = "MyProfile")
+        ProfileMenuItem(icon = Icons.Default.Person, text = "My Profile")
         ProfileMenuItem(icon = Icons.Default.Lock, text = "Password Manager")
         ProfileMenuItem(icon = Icons.Default.Face, text = "ChatBot")
-        ProfileMenuItem(icon = Icons.Default.ExitToApp, text = "LogOut")
+        ProfileMenuItem(icon = Icons.AutoMirrored.Filled.ExitToApp, text = "Log Out")
     }
 }
 
@@ -120,9 +120,9 @@ fun ProfileMenuItem(icon: ImageVector, text: String) {
                 modifier = Modifier.weight(1f)
             )
             Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "Next",
-                tint = Color.Gray
+                tint = Primary
             )
         }
         Divider()
