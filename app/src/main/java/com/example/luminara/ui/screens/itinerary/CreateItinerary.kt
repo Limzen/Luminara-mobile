@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.luminara.ui.components.ListItinerary
@@ -73,7 +74,8 @@ fun CreateItinerary() {
             ) {
                 Text(
                     text = "TRAVEL ITINERARY",
-                    style = MaterialTheme.typography.displaySmall,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -116,7 +118,7 @@ fun CreateItinerary() {
                         )
                     }
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Create itinerary", style = MaterialTheme.typography.titleMedium)
+                    Text("Create itinerary", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
