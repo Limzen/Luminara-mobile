@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.luminara.R
+import com.example.luminara.ui.components.Buttonback
 import com.example.luminara.ui.components.ItineraryTextfield
 import com.example.luminara.ui.theme.BackbuttonArrow
 import com.example.luminara.ui.theme.DarkText
@@ -70,7 +71,7 @@ fun FormItinerary() {
     Column(modifier = Modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
-                .height(160.dp)
+                .height(165.dp)
                 .width(500.dp)
                 .background(color = Primary)
         ) {
@@ -80,28 +81,7 @@ fun FormItinerary() {
                     .padding(vertical = 60.dp)
                     .padding(horizontal = 30.dp),
             ) {
-                Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = BackbuttonArrow,
-                        contentColor = Color.White,
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = 10.dp,
-                        pressedElevation = 6.dp
-                    ),
-                    shape = RoundedCornerShape(16.dp),
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Icon(
-                        Icons.Filled.KeyboardArrowLeft,
-                        contentDescription = "ArrowLeft",
-                        modifier = Modifier.size(35.dp)
-                    )
-                }
+                Buttonback(onClick = {})
             }
 
             Row(
@@ -111,7 +91,7 @@ fun FormItinerary() {
             ) {
                 Text(
                     "New Itinerary",
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineSmall,
                     color = OnPrimary,
                     fontWeight = FontWeight.Bold
                 )

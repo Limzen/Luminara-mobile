@@ -25,6 +25,6 @@ var FillTextfield = Color(0xFFF7FBFF)
 val ListItinerary = Color(0xFFD9D9D9)
 val LightBrown = Color(0xFFD6BBA1)
 val YellowText = Color(0XFFFFC107)
-
-val ListItinerary = Color(0xFFD9D9D9)
 val BackbuttonArrow = Color(0xFFAD6825)
+val DetailIti = Color(0xFFB7885A)
+val Gray = Color(0xFFB3B3B3)
