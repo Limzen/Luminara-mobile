@@ -26,5 +26,4 @@ val ListItinerary = Color(0xFFD9D9D9)
 val LightBrown = Color(0xFFD6BBA1)
 val YellowText = Color(0XFFFFC107)
 
-val ListItinerary = Color(0xFFD9D9D9)
 val BackbuttonArrow = Color(0xFFAD6825)
