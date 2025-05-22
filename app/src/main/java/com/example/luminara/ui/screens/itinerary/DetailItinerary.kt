@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -74,7 +76,7 @@ private fun TopHeader(){
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                "(Road To Heaven)",
+                "Road To Heaven",
                 style = MaterialTheme.typography.headlineSmall,
                 color = OnPrimary,
                 fontWeight = FontWeight.Bold
@@ -111,7 +113,7 @@ private fun Detail() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .offset(y = (-55).dp)
+            .offset(y = (-65).dp)
             .background(
                 color = OnPrimary,
                 shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
@@ -119,19 +121,22 @@ private fun Detail() {
 
 
         ){
-
-        Column (
-            modifier = Modifier.fillMaxSize()
-        ){
-            DetailItinerary()
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            TravelBudgeting()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Notes()
+        LazyColumn ( Modifier.fillMaxSize() ){
+            item {
+                DetailItinerary()
+            }
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+            item {
+                TravelBudgeting()
+            }
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            item {
+                Notes()
+            }
 
         }
     }
@@ -307,6 +312,8 @@ private fun Notes() {
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(16.dp)
+            .defaultMinSize(minHeight = 80.dp)
+
     ) {
         Text(
             text = "Bawalah perlengkapan ibadah dan berpakaian yang sopan saat mengunjungi lokasi ini.",
