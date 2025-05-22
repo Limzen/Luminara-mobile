@@ -8,6 +8,7 @@ import com.example.luminara.ui.screens.itinerary.CreateItinerary
 import com.example.luminara.ui.screens.home.HomeScreen
 import com.example.luminara.ui.screens.itinerary.FormItinerary
 import com.example.luminara.ui.screens.login.LoginScreen
+import com.example.luminara.ui.screens.profile.MyProfileScreen
 import com.example.luminara.ui.screens.signup.SignUpScreen
 import com.example.luminara.ui.screens.profile.ProfileScreen
 import com.example.luminara.ui.theme.LuminaraTheme
@@ -18,7 +19,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LuminaraTheme {
-                HomeScreen()
+
+                MyProfileScreen()
             }
         }
     }
