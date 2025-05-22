@@ -40,16 +40,27 @@ import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
 
 @Composable
-fun DetailItinerary(modifier: Modifier = Modifier) {
+fun DetailItinerary() {
 
-    Column (modifier = Modifier.fillMaxSize()){
+    Box (
 
-        TopHeader()
+    ){ TopHeader() }
+
+    Box(
+        modifier = Modifier.padding(top = 120.dp)
+    ){
         ImageHeader()
+    }
+
+    Box(
+        modifier = Modifier.padding(top = 350.dp)
+    ){
         Detail()
+    }
+
+
 
     }
-}
 
 
 
@@ -91,8 +102,7 @@ private fun ImageHeader() {
     Box(
         modifier = Modifier
             .height(240.dp)
-            .width(500.dp)
-            .offset(y = (-40).dp),
+            .width(500.dp),
 
     ){
         Image(
@@ -113,7 +123,6 @@ private fun Detail() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .offset(y = (-65).dp)
             .background(
                 color = OnPrimary,
                 shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
@@ -121,9 +130,12 @@ private fun Detail() {
 
 
         ){
-        LazyColumn ( Modifier.fillMaxSize() ){
+        LazyColumn (
+            Modifier
+                .fillMaxSize()
+        ){
             item {
-                DetailItinerary()
+                DetailItineraryContent()
             }
             item {
                 Spacer(modifier = Modifier.height(24.dp))
@@ -137,16 +149,18 @@ private fun Detail() {
             item {
                 Notes()
             }
+            item {
+                Spacer(modifier = Modifier.height(42.dp))
+            }
 
         }
     }
 }
 
 @Composable
-private fun DetailItinerary() {
+private fun DetailItineraryContent() {
     Column (
         modifier = Modifier
-            .fillMaxWidth()
             .padding(Dimensions.OuterPadding),
 
         ){
@@ -312,7 +326,7 @@ private fun Notes() {
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(16.dp)
-            .defaultMinSize(minHeight = 80.dp)
+            .defaultMinSize(minHeight = 90.dp)
 
     ) {
         Text(
