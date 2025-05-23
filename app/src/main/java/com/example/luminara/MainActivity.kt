@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.luminara.ui.screen.PasswordManagerScreen
 import com.example.luminara.ui.screens.itinerary.CreateItinerary
 import com.example.luminara.ui.screens.home.HomeScreen
 import com.example.luminara.ui.screens.itinerary.FormItinerary
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LuminaraTheme {
 
-                MyProfileScreen()
+                PasswordManagerScreen()
             }
         }
     }
