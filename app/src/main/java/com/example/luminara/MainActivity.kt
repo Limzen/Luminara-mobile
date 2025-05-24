@@ -9,6 +9,7 @@ import com.example.luminara.ui.screens.itinerary.CreateItinerary
 import com.example.luminara.ui.screens.home.HomeScreen
 import com.example.luminara.ui.screens.itinerary.FormItinerary
 import com.example.luminara.ui.screens.login.LoginScreen
+import com.example.luminara.ui.screens.profile.ChatBotScreen
 import com.example.luminara.ui.screens.profile.MyProfileScreen
 import com.example.luminara.ui.screens.signup.SignUpScreen
 import com.example.luminara.ui.screens.profile.ProfileScreen
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LuminaraTheme {
 
-                PasswordManagerScreen()
+                ChatBotScreen()
             }
         }
     }
