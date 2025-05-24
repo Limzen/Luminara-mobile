@@ -5,8 +5,10 @@ import android.app.TimePickerDialog
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -18,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.luminara.R
 import com.example.luminara.ui.components.Buttonback
@@ -26,6 +29,7 @@ import com.example.luminara.ui.theme.BackbuttonArrow
 import com.example.luminara.ui.theme.DarkText
 import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Primary
+import com.example.luminara.utils.Dimensions
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,9 +95,10 @@ fun FormItinerary() {
             ) {
                 Text(
                     "New Itinerary",
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
                     color = OnPrimary,
-                    fontWeight = FontWeight.Bold
+
                 )
             }
         }
@@ -107,7 +112,7 @@ fun FormItinerary() {
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
                 .padding(top = 24.dp)
-                .padding(horizontal = 20.dp),
+                .padding(Dimensions.OuterPadding),
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -171,7 +176,6 @@ fun FormItinerary() {
                             expanded = expanded,
                             onDismissRequest = { expanded = false },
                             shape = RoundedCornerShape(5.dp),
-                            border = BorderStroke(1.dp, Primary),
                             containerColor = OnPrimary,
                         ) {
                             destinationOptions.forEach { option ->
@@ -197,7 +201,7 @@ fun FormItinerary() {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(50.dp),
                     verticalAlignment = Alignment.Top
                 ) {
                     ItineraryTextfield(
@@ -206,7 +210,9 @@ fun FormItinerary() {
                         placeholder = "Date",
                         label = "Travel Dates",
                         singleLine = true,
-                        modifier = Modifier.width(150.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(85.dp),
                         trailingIcon = {
                             Button(
                                 onClick = {/* datePickerDialog.show()*/ },
@@ -222,16 +228,15 @@ fun FormItinerary() {
                             }
                         }
                     )
-
-                    Spacer(modifier = Modifier.width(20.dp))
-
                     ItineraryTextfield(
                         value = itineraryTime,
                         onValueChange = { itineraryTime = it },
                         placeholder = "Time",
                         label = "Time",
                         singleLine = true,
-                        modifier = Modifier.width(160.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(85.dp),
                         trailingIcon = {
                             Button(
                                 onClick = { /*timePickerDialog.show() */},
@@ -259,7 +264,8 @@ fun FormItinerary() {
                     onValueChange = { itineraryBudget = it },
                     placeholder = "Type your Budget (Numbers Only)",
                     label = "Estimated Budget",
-                    singleLine = true
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))

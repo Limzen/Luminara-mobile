@@ -13,7 +13,7 @@ val MiniHeading = Color(0xFF4B5563)
 
 // Secondary Colors
 val Secondary = Color(0xFF625B71)
-val OnSecondary = Color(0xFFFFFFFF)
+val OnSecondary = Color(0xABD9D9D9)
 val SecondaryContainer = Color(0xFFE8DEF8)
 val OnSecondaryContainer = Color(0xFF1D192B)
 
@@ -22,7 +22,7 @@ val OnSecondaryContainer = Color(0xFF1D192B)
 val DarkText = Color(0xFF121212)
 var BlueText = Color(0xFF1E4AE9)
 var FillTextfield = Color(0xFFF7FBFF)
-val ListItinerary = Color(0xFFD9D9D9)
+val ListItinerary = Color(0xFFE7E7E7)
 val LightBrown = Color(0xFFD6BBA1)
 val YellowText = Color(0XFFFFC107)
 val BackbuttonArrow = Color(0xFFAD6825)

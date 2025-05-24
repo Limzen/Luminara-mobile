@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.components.ListItinerary
 import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Primary
@@ -47,16 +48,7 @@ fun CreateItinerary() {
     Scaffold(
         containerColor = Color.White,
         bottomBar = {
-            BottomAppBar(
-                containerColor = Primary,
-                contentColor = OnPrimary,
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = "Navbar",
-                )
-            }
+            BottomBar()
         }
     ) { innerPadding ->
 
@@ -74,7 +66,7 @@ fun CreateItinerary() {
             ) {
                 Text(
                     text = "TRAVEL ITINERARY",
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.titleLarge ,
                     fontWeight = FontWeight.Bold
                 )
 

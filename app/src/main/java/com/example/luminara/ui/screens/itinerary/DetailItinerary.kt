@@ -58,9 +58,7 @@ fun DetailItinerary() {
         Detail()
     }
 
-
-
-    }
+}
 
 
 
@@ -88,7 +86,7 @@ private fun TopHeader(){
         ) {
             Text(
                 "Road To Heaven",
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.titleLarge,
                 color = OnPrimary,
                 fontWeight = FontWeight.Bold
             )
