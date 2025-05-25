@@ -29,7 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.luminara.R
-import com.example.luminara.ui.components.Buttonback
+import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
@@ -88,7 +88,7 @@ fun GuideScreen() {
                         top = 15.dp
                     )
             ) {
-                Buttonback(onClick = {})
+                BackButton(onClick = {})
             }
         }
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -12,6 +13,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.input.VisualTransformation
 import com.example.luminara.ui.theme.DarkText
 import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Primary
@@ -24,7 +26,9 @@ fun ItineraryTextfield(
     placeholder: String,
     label: String,
     singleLine: Boolean = true,
-    trailingIcon: (@Composable (() -> Unit))? = null
+    trailingIcon: (@Composable (() -> Unit))? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     Column(modifier = modifier) {
         Text(
@@ -44,6 +48,8 @@ fun ItineraryTextfield(
             shape = RoundedCornerShape(5.dp),
             singleLine = singleLine,
             trailingIcon = trailingIcon,
+            visualTransformation = visualTransformation,
+            keyboardOptions = keyboardOptions,
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = OnPrimary,
                 focusedTextColor = DarkText,

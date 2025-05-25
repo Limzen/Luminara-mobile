@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import com.example.luminara.ui.screens.home.GuideScreen
 import com.example.luminara.ui.screens.itinerary.CreateItinerary
 import com.example.luminara.ui.screens.home.HomeScreen
+import com.example.luminara.ui.screens.itinerary.DetailItinerary
 import com.example.luminara.ui.screens.home.SearchScreen
 import com.example.luminara.ui.screens.home.SiteDetailScreen
 import com.example.luminara.ui.screens.itinerary.FormItinerary

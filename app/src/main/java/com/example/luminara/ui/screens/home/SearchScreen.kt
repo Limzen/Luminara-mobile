@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.luminara.R
 import com.example.luminara.domain.model.ReligiousSite
-import com.example.luminara.ui.components.Buttonback
+import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.components.SearchResult
 import com.example.luminara.ui.components.SearchTextField
 import com.example.luminara.ui.theme.BackgroundColor
@@ -70,7 +70,7 @@ fun SearchScreen() {
                 .background(color = Primary)
                 .padding(start = Dimensions.OuterPadding, end = Dimensions.OuterPadding, top = 45.dp)
         ) {
-            Buttonback(onClick = {})
+            BackButton(onClick = {})
             Spacer(Modifier.width(10.dp))
             SearchTextField(value = searchQuery, onValueChange = { searchQuery = it}, placeholder = "Where to go?")
         }

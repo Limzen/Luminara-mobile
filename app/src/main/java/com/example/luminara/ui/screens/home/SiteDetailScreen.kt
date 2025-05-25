@@ -40,7 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.luminara.R
-import com.example.luminara.ui.components.Buttonback
+import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.components.ReviewCard
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.DarkText
@@ -104,7 +104,7 @@ fun SiteDetailScreen() {
                         top = 15.dp
                     )
             ) {
-                Buttonback(onClick = {})
+                BackButton(onClick = {})
             }
         }
 

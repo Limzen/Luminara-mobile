@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.example.luminara.ui.theme.DarkText
 import com.example.luminara.ui.theme.ListItinerary
 import com.example.luminara.ui.theme.OnPrimary
+import com.example.luminara.ui.theme.OnSecondary
 import com.example.luminara.ui.theme.Primary
 
 @Composable
@@ -83,58 +84,69 @@ fun ListItinerary(
                                 contentDescription = "Morevert",
                                 modifier = Modifier.size(35.dp)
                             )
-                        }
+                            DropdownMenu(
+                                expanded = expanded,
+                                modifier = Modifier
+                                    .width(150.dp)
+                                    .height(110.dp),
+                                onDismissRequest = { expanded = false },
+                                shape = RoundedCornerShape(12.dp),
+                                containerColor = OnPrimary,
+                                tonalElevation = 4.dp,
 
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false },
-                            offset = DpOffset(x = (240).dp, y = 2.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            border = BorderStroke(1.dp, Primary),
-                            containerColor = OnPrimary,
-                            tonalElevation = 4.dp,
+                                ) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Row (
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier.fillMaxWidth()
+                                            ,
+                                        ){
+                                            Icon(
+                                                imageVector = Icons.Filled.Edit,
+                                                contentDescription = "Edit",
+                                                modifier = Modifier.size(16.dp),
+                                                tint = DarkText
+                                            )
+                                            Spacer(Modifier.width(4.dp))
+                                            Text("Edit", style = MaterialTheme.typography.titleSmall, color = DarkText)
 
-                            ) {
-                            DropdownMenuItem(
-                                text = {
-                                    Row (
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ){
-                                        Icon(
-                                            imageVector = Icons.Filled.Edit,
-                                            contentDescription = "Edit",
-                                        )
-                                        Text("Edit", style = MaterialTheme.typography.titleSmall, color = DarkText)
+                                        }
+                                    },
+                                    onClick = {
+                                        expanded = false
+                                        // TODO: aksi edit
+                                    },
 
+                                    )
+                                Divider(
+                                    thickness = 1.dp,
+                                    color = OnSecondary, // Atau gunakan warna custom sesuai tema
+                                    modifier = Modifier.padding(horizontal = 4.dp)
+                                )
+
+                                DropdownMenuItem(
+                                    text = {
+                                        Row (
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier.fillMaxWidth(),
+                                        ){
+                                            Icon(
+                                                imageVector = Icons.Filled.Delete,
+                                                contentDescription = "Delete",
+                                                modifier = Modifier.size(16.dp),
+                                                tint = DarkText
+                                            )
+                                            Spacer(Modifier.width(4.dp))
+                                            Text("Delete", style = MaterialTheme.typography.titleSmall, color = DarkText)
+
+                                        }  },
+                                    onClick = {
+                                        expanded = false
+                                        // TODO: aksi delete
                                     }
-                                },
-                                onClick = {
-                                    expanded = false
-                                    // TODO: aksi edit
-                                },
-
-                            )
-                            DropdownMenuItem(
-                                text = {
-                                    Row (
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ){
-                                        Icon(
-                                            imageVector = Icons.Filled.Delete,
-                                            contentDescription = "Delete"
-                                        )
-                                        Text("Delete", style = MaterialTheme.typography.titleSmall, color = DarkText)
-
-                                    }  },
-                                onClick = {
-                                    expanded = false
-                                    // TODO: aksi delete
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
