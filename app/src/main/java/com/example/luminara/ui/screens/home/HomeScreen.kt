@@ -30,7 +30,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +53,7 @@ import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.components.HomeFilterChip
 import com.example.luminara.ui.components.HorizontalSitesCard
 import com.example.luminara.ui.components.ReligionTypeChip
+import com.example.luminara.ui.components.SearchTextField
 import com.example.luminara.ui.components.VerticalSitesCard
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.LightBrown
@@ -79,10 +83,10 @@ val religionTypes = listOf<ReligionType>(
 )
 
 val religiousSites = listOf<ReligiousSite>(
-    ReligiousSite(id = 1, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim"),
-    ReligiousSite(id = 2, name = "Masjid Al Osmani", district = "Medan Labuhan District", rating = 4f, religion = "Muslim"),
-    ReligiousSite(id = 3, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim"),
-    ReligiousSite(id = 4, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim"),
+    ReligiousSite(id = 1, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim", image = R.drawable.mosque1, time = "07:00-19.30"),
+    ReligiousSite(id = 2, name = "Masjid Al Osmani", district = "Medan Labuhan District", rating = 4f, religion = "Muslim",image = R.drawable.mosque1,time = "07:00-19.30"),
+    ReligiousSite(id = 3, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim",image = R.drawable.mosque1,time = "07:00-19.30"),
+    ReligiousSite(id = 4, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim",image = R.drawable.mosque1,time = "07:00-19.30"),
 )
 
 val bottomNavItems = listOf(
@@ -95,6 +99,8 @@ val bottomNavItems = listOf(
 
 @Composable
 fun HomeScreen() {
+    var searchQuery by remember { mutableStateOf("") }
+
     Scaffold(
         bottomBar = { BottomBar() }
     ) { paddingValues ->
@@ -106,7 +112,10 @@ fun HomeScreen() {
         )
         {
             item{
-                TopHeader()
+                TopHeader(
+                    searchQuery = searchQuery,
+                    onSearchQuery = {searchQuery = it}
+                )
             }
             item{
                 Spacer(modifier = Modifier.height(8.dp))
@@ -147,7 +156,10 @@ fun HomeScreen() {
 }
 
 @Composable
-private fun TopHeader() {
+private fun TopHeader(
+    searchQuery: String,
+    onSearchQuery: (String) -> Unit
+) {
     Box {
     Column(
         modifier = Modifier
@@ -181,50 +193,13 @@ private fun TopHeader() {
             Icon(Icons.Default.ArrowDropDown, contentDescription = "Lang")
         }
         Spacer(modifier = Modifier.height(10.dp))
-        BasicTextField(
-            value = "",
-            onValueChange = {},
-            singleLine = true,
-            textStyle = MaterialTheme.typography.bodyMedium.copy(
-                color = Color.Black,
-                fontSize = 14.sp
-            ),
-            decorationBox = { innerTextField ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                        .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(OnPrimary)
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search",
-                        modifier = Modifier
-                            .size(20.dp)
-                            .padding(end = 8.dp)
-                    )
-
-                        Text(
-                            text = "Where to go?",
-                            color = Color.Gray,
-                            fontSize = 14.sp
-                        )
-                    innerTextField()
-                }
-            }
-        )
-
-
+        SearchTextField(value = searchQuery, onValueChange = onSearchQuery, placeholder = "Where to go?")
     }
 
         Box(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 155.dp, start = Dimensions.OuterPadding, end = Dimensions.OuterPadding)
+                .padding(top = 125.dp, start = Dimensions.OuterPadding, end = Dimensions.OuterPadding)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.home_img),
