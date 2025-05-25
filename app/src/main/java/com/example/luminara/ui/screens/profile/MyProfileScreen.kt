@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 
@@ -37,9 +38,12 @@ import com.example.luminara.domain.model.BackButton
 import com.example.luminara.ui.components.AuthButton
 import com.example.luminara.ui.components.AuthTextField
 import com.example.luminara.ui.components.ItineraryTextfield
+import com.example.luminara.ui.theme.BackbuttonArrow
+import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.DarkText
 import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Primary
+import com.example.luminara.utils.Dimensions
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,72 +64,96 @@ fun MyProfileScreen() {
     var expandedGender by remember { mutableStateOf(false) }
 
 
-    Column(modifier = Modifier.fillMaxSize()) {
-
-
-            Box(
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 32.dp)
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFA56533))
-                    .clickable { },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color.White
-                )
-            }
-        }
-
-        // Profile Image
-        Box(
-            modifier = Modifier
-                .offset(y = (-80).dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            Box {
-                Image(
-                    painter = painterResource(id = R.drawable.kucing),
-                    contentDescription = "Profile Picture",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(150.dp)
-                        .clip(CircleShape)
-                        .border(10.dp, Color.White, CircleShape)
-                )
-                Box(
-                    modifier = Modifier
-                        .offset(x = 110.dp, y = 100.dp)
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(color = Primary)
-                        .padding(4.dp)
-                        .clickable { },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit Profile Picture",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "My Profile",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        color = Color.White
                     )
-                }
-            }
+                },
+                navigationIcon = {
+                   BackButton(
+                       onClick = {},
+                       modifier = Modifier.padding(start = Dimensions.OuterPadding)
+                   )
+                },
+                actions = {
+                    Button(
+                        modifier = Modifier.padding(end = Dimensions.OuterPadding),
+                        onClick = {  },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = BackbuttonArrow,
+                            contentColor = Color.White
+                        ), // Removed extra comma and parenthesis
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 10.dp,
+                            pressedElevation = 6.dp
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text(
+                            text = "Save",
+                            style = MaterialTheme.typography.titleSmall
+                            )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Primary,
+                    navigationIconContentColor = Color.White,
+                    titleContentColor = Color.White
+                )
+            )
         }
-
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
-                .offset(y = -80.dp )
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 8.dp),
+                .fillMaxSize()
+                .background(BackgroundColor)
+                .padding(innerPadding)
+                .padding(horizontal = Dimensions.OuterPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
 
         ) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.kucing),
+                        contentDescription = "Profile Picture",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(150.dp)
+                            .clip(CircleShape)
+                            .border(10.dp, Color.White, CircleShape)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .offset(x = 50.dp, y = 60.dp)
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(color = Primary)
+                            .padding(4.dp)
+                            .clickable { },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit Profile Picture",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            }
             item {
                 ItineraryTextfield(
                     value = name,
@@ -150,7 +178,7 @@ fun MyProfileScreen() {
                         OutlinedTextField(
                             value = religion,
                             onValueChange = {},
-                            placeholder ={ Text("Religion") },
+                            placeholder = { Text("Religion") },
                             readOnly = true,
                             trailingIcon = {
                                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedReligion)
@@ -196,11 +224,27 @@ fun MyProfileScreen() {
             }
             item {
                 ItineraryTextfield(
-                    value = contactNumber,
-                    onValueChange = { contactNumber = it },
-                    placeholder = "Masukan No Telp",
-                    label = "Phone Number",
+                    value = birthDate,
+                    onValueChange = { birthDate = it },
+                    placeholder = "Date",
+                    label = "Date Of Birth",
                     singleLine = true,
+                    modifier = Modifier.width(500.dp),
+                    trailingIcon = {
+                        Button(
+                            onClick = { },
+                            modifier = Modifier.size(30.dp),
+                            shape = CircleShape,
+                            contentPadding = PaddingValues(0.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = OnPrimary,
+                                contentColor = Primary,
+                            )
+                        ) {
+                            Icon(Icons.Filled.DateRange, contentDescription = "Date")
+                        }
+
+                    }
                 )
             }
             item {
@@ -221,7 +265,7 @@ fun MyProfileScreen() {
                             onValueChange = {},
                             shape = RoundedCornerShape(5.dp),
                             readOnly = true,
-                            placeholder ={ Text("Gender") },
+                            placeholder = { Text("Gender") },
                             trailingIcon = {
                                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedGender)
                             },
@@ -259,54 +303,16 @@ fun MyProfileScreen() {
             }
             item {
                 ItineraryTextfield(
-                    value = birthDate,
-                    onValueChange = { birthDate = it },
-                    placeholder = "Date",
-                    label = "Date Of Birth",
+                    value = contactNumber,
+                    onValueChange = { contactNumber = it },
+                    placeholder = "Masukan No Telp",
+                    label = "Phone Number",
                     singleLine = true,
-                    modifier = Modifier.width(500.dp),
-                    trailingIcon = {
-                        Button(
-                            onClick = { },
-                            modifier = Modifier.size(30.dp),
-                            shape = CircleShape,
-                            contentPadding = PaddingValues(0.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = OnPrimary,
-                                contentColor = Primary,
-                            )
-                        ) {
-                            Icon(Icons.Filled.DateRange, contentDescription = "Date")
-                        }
-
-                    }
                 )
-            }
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.BottomEnd
-                ) {
-                    Button(
-                        onClick = {},
-
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Primary,
-                            contentColor = OnPrimary
-
-                        )
-                    ) {
-                        Text(
-                            "Save Changes",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
             }
         }
     }
+}
 
 
 
