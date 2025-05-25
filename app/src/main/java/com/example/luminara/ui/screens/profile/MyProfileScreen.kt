@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.example.luminara.R
+import com.example.luminara.domain.model.BackButton
 import com.example.luminara.ui.components.AuthButton
 import com.example.luminara.ui.components.AuthTextField
 import com.example.luminara.ui.components.ItineraryTextfield
@@ -43,24 +45,23 @@ import com.example.luminara.ui.theme.Primary
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyProfileScreen() {
+    // Form Inputs
+    var name by remember { mutableStateOf("Cristie Wanna") }
+    var religion by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("Cristiewanna123@Gmail.Com") }
+    var contactNumber by remember { mutableStateOf("081390001234") }
+    var gender by remember { mutableStateOf("") }
+    var birthDate by remember { mutableStateOf("October 28, 2003") }
+
+    val religionOptions = listOf("Islam", "Kristen", "Katolik", "Hindu", "Buddha")
+    val genderOptions = listOf("Laki-laki", "Perempuan")
+
+    var expandedReligion by remember { mutableStateOf(false) }
+    var expandedGender by remember { mutableStateOf(false) }
+
+
     Column(modifier = Modifier.fillMaxSize()) {
 
-        // Header
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp)
-                .background(color = Primary)
-        ) {
-            Text(
-                text = "My Profile",
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 32.dp)
-            )
 
             Box(
                 modifier = Modifier
@@ -116,21 +117,7 @@ fun MyProfileScreen() {
             }
         }
 
-        // Form Inputs
-        var nama by remember { mutableStateOf("Cristie Wanna") }
-        var religion by remember { mutableStateOf("") }
-        var email by remember { mutableStateOf("Cristiewanna123@Gmail.Com") }
-        var notelpon by remember { mutableStateOf("081390001234") }
-        var gender by remember { mutableStateOf("") }
-        var birthDate by remember { mutableStateOf("October 28, 2003") }
-
-        val religionOptions = listOf("Islam", "Kristen", "Katolik", "Hindu", "Buddha")
-        val genderOptions = listOf("Laki-laki", "Perempuan")
-
-        var expandedReligion by remember { mutableStateOf(false) }
-        var expandedGender by remember { mutableStateOf(false) }
-
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .offset(y = -80.dp )
                 .fillMaxWidth()
@@ -139,169 +126,187 @@ fun MyProfileScreen() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
 
         ) {
-
-            ItineraryTextfield(
-                value = nama,
-                onValueChange = { nama = it },
-                placeholder = "Name",
-                label = "name",
-                singleLine = true,
-            )
-
-            // Religion
-            ExposedDropdownMenuBox(
-                expanded = expandedReligion,
-                onExpandedChange = { expandedReligion = !expandedReligion }
-            ) {
-                OutlinedTextField(
-                    value = religion,
-                    onValueChange = {},
-                    placeholder ={ Text("Religion") },
-                    readOnly = true,
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedReligion)
-                    },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = OnPrimary,
-                        focusedTextColor = DarkText,
-                        focusedContainerColor = OnPrimary,
-                        unfocusedTextColor = DarkText,
-                        focusedIndicatorColor = Primary,
-                        unfocusedIndicatorColor = Primary
-                    )
+            item {
+                ItineraryTextfield(
+                    value = name,
+                    onValueChange = { name = it },
+                    placeholder = "Name",
+                    label = "Name",
+                    singleLine = true,
                 )
-
-                ExposedDropdownMenu(
-                    expanded = expandedReligion,
-                    onDismissRequest = { expandedReligion = false }
-                ) {
-                    religionOptions.forEach { selection ->
-                        DropdownMenuItem(
-                            text = { Text(selection) },
-                            onClick = {
-                                religion = selection
-                                expandedReligion = false
-                            }
+            }
+            item {
+                Column() {
+                    Text(
+                        text = "Religion",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Primary
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ExposedDropdownMenuBox(
+                        expanded = expandedReligion,
+                        onExpandedChange = { expandedReligion = !expandedReligion }
+                    ) {
+                        OutlinedTextField(
+                            value = religion,
+                            onValueChange = {},
+                            placeholder ={ Text("Religion") },
+                            readOnly = true,
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedReligion)
+                            },
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth(),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = OnPrimary,
+                                focusedTextColor = DarkText,
+                                focusedContainerColor = OnPrimary,
+                                unfocusedTextColor = DarkText,
+                                focusedIndicatorColor = Primary,
+                                unfocusedIndicatorColor = Primary
+                            )
                         )
+
+                        ExposedDropdownMenu(
+                            expanded = expandedReligion,
+                            onDismissRequest = { expandedReligion = false }
+                        ) {
+                            religionOptions.forEach { selection ->
+                                DropdownMenuItem(
+                                    text = { Text(selection) },
+                                    onClick = {
+                                        religion = selection
+                                        expandedReligion = false
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }
-
-            ItineraryTextfield(
-                value = email,
-                onValueChange = { email = it },
-                placeholder = "Masukan email",
-                label = "Email",
-                singleLine = true,
-            )
-            ItineraryTextfield(
-                value = notelpon,
-                onValueChange = { notelpon = it },
-                placeholder = "Masukan No Telp",
-                label = "Phone Number",
-                singleLine = true,
-            )
-
-
-            ExposedDropdownMenuBox(
-                expanded = expandedGender,
-                onExpandedChange = { expandedGender = !expandedGender }
-
-            ) {
-                OutlinedTextField(
-                    value = gender,
-                    onValueChange = {},
-                    shape = RoundedCornerShape(5.dp),
-                    readOnly = true,
-                    placeholder ={ Text("Gender") },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedGender)
-                    },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = OnPrimary,
-                        focusedTextColor = DarkText,
-                        focusedContainerColor = OnPrimary,
-                        unfocusedTextColor = DarkText,
-                        focusedIndicatorColor = Primary,
-                        unfocusedIndicatorColor = Primary
-                    )
-
-
+            item {
+                ItineraryTextfield(
+                    value = email,
+                    onValueChange = { email = it },
+                    placeholder = "Masukan email",
+                    label = "Email",
+                    singleLine = true,
                 )
+            }
+            item {
+                ItineraryTextfield(
+                    value = contactNumber,
+                    onValueChange = { contactNumber = it },
+                    placeholder = "Masukan No Telp",
+                    label = "Phone Number",
+                    singleLine = true,
+                )
+            }
+            item {
+                Column() {
+                    Text(
+                        text = "Religion",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Primary
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ExposedDropdownMenuBox(
+                        expanded = expandedGender,
+                        onExpandedChange = { expandedGender = !expandedGender }
 
-                ExposedDropdownMenu(
-                    expanded = expandedGender,
-                    onDismissRequest = { expandedGender = false }
-                ) {
-                    genderOptions.forEach { selection ->
-                        DropdownMenuItem(
-                            text = { Text(selection) },
-                            onClick = {
-                                gender = selection
-                                expandedGender = false
-                            }
+                    ) {
+                        OutlinedTextField(
+                            value = gender,
+                            onValueChange = {},
+                            shape = RoundedCornerShape(5.dp),
+                            readOnly = true,
+                            placeholder ={ Text("Gender") },
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedGender)
+                            },
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth(),
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = OnPrimary,
+                                focusedTextColor = DarkText,
+                                focusedContainerColor = OnPrimary,
+                                unfocusedTextColor = DarkText,
+                                focusedIndicatorColor = Primary,
+                                unfocusedIndicatorColor = Primary
+                            )
+
+
                         )
+
+                        ExposedDropdownMenu(
+                            expanded = expandedGender,
+                            onDismissRequest = { expandedGender = false }
+                        ) {
+                            genderOptions.forEach { selection ->
+                                DropdownMenuItem(
+                                    text = { Text(selection) },
+                                    onClick = {
+                                        gender = selection
+                                        expandedGender = false
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }
+            item {
+                ItineraryTextfield(
+                    value = birthDate,
+                    onValueChange = { birthDate = it },
+                    placeholder = "Date",
+                    label = "Date Of Birth",
+                    singleLine = true,
+                    modifier = Modifier.width(500.dp),
+                    trailingIcon = {
+                        Button(
+                            onClick = { },
+                            modifier = Modifier.size(30.dp),
+                            shape = CircleShape,
+                            contentPadding = PaddingValues(0.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = OnPrimary,
+                                contentColor = Primary,
+                            )
+                        ) {
+                            Icon(Icons.Filled.DateRange, contentDescription = "Date")
+                        }
 
-
-            ItineraryTextfield(
-                value = birthDate,
-                onValueChange = { birthDate = it },
-                placeholder = "Date",
-                label = "Date Of Birth",
-                singleLine = true,
-                modifier = Modifier.width(500.dp),
-                trailingIcon = {
+                    }
+                )
+            }
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
                     Button(
-                        onClick = { },
-                        modifier = Modifier.size(30.dp),
-                        shape = CircleShape,
-                        contentPadding = PaddingValues(0.dp),
+                        onClick = {},
+
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = OnPrimary,
-                            contentColor = Primary,
+                            containerColor = Primary,
+                            contentColor = OnPrimary
+
                         )
                     ) {
-                        Icon(Icons.Filled.DateRange, contentDescription = "Date")
+                        Text(
+                            "Save Changes",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
-
-                }
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.BottomEnd
-            ) {
-                Button(
-                    onClick = {},
-
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Primary,
-                        contentColor = OnPrimary
-
-                    )
-                ) {
-                    Text(
-                        "Save Changes",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
                 }
             }
-
-
         }
     }
-
-}
 
 
 
