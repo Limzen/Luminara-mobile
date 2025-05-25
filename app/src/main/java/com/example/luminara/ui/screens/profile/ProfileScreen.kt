@@ -27,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.theme.Primary
 
 
@@ -37,6 +38,7 @@ fun ProfileScreen() {
             .fillMaxSize()
             .background(Color.White)
     ) {
+
 
         Box(
             modifier = Modifier
@@ -97,6 +99,9 @@ fun ProfileScreen() {
 }
 
 
+
+
+
 @Composable
 fun ProfileMenuItem(icon: ImageVector, text: String) {
     Column(
@@ -128,6 +133,7 @@ fun ProfileMenuItem(icon: ImageVector, text: String) {
         Divider()
     }
 }
+
 
 
 
