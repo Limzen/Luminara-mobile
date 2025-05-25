@@ -39,7 +39,6 @@ fun ProfileScreen() {
             .background(Color.White)
     ) {
 
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
