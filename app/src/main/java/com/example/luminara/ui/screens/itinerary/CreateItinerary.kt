@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.luminara.domain.model.Itinerary
 import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.components.ListItinerary
 import com.example.luminara.ui.theme.OnPrimary
@@ -38,12 +39,12 @@ import com.example.luminara.ui.theme.Primary
 @Composable
 fun CreateItinerary() {
     val itineraries = listOf(
-        Itinerary("11 Mei 2025", "Nama Itinerary", "Masjid nurul huda"),
-        Itinerary("12 Mei 2025", "Nama Itinerary", "Graha Maria Annai Velangkani"),
-        Itinerary("13 Mei 2025", "Nama Itinerary", "Masjid agung"),
         Itinerary("Today", "Nama Itinerary", "Masjid agung"),
+        Itinerary("14 Mei 2025", "Nama Itinerary", "Masjid nurul huda"),
+        Itinerary("13 Mei 2025", "Nama Itinerary", "Graha Maria Annai Velangkani"),
+        Itinerary("12 Mei 2025", "Nama Itinerary", "Masjid agung"),
+        Itinerary("11 Mei 2025", "Nama Itinerary", "Masjid raya"),
     )
-//    val itineraries = listOf<Itinerary>()
 
     Scaffold(
         containerColor = Color.White,
@@ -153,9 +154,4 @@ fun CreateItinerary() {
 }
 
 
-// DATA SEMENTARA
-data class Itinerary(
-    val date: String,
-    val name: String,
-    val destination: String
-)
+
