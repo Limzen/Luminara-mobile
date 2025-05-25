@@ -43,6 +43,7 @@ import com.example.luminara.R
 import com.example.luminara.ui.components.Buttonback
 import com.example.luminara.ui.components.ReviewCard
 import com.example.luminara.ui.theme.BackgroundColor
+import com.example.luminara.ui.theme.DarkText
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.ui.theme.YellowText
 import com.example.luminara.utils.Dimensions
@@ -297,8 +298,10 @@ private fun RatingSection() {
                                 .fillMaxWidth()
                                 .height(8.dp)
                                 .clip(RoundedCornerShape(4.dp)),
-                            color = YellowText, // Yellow
+                            color = YellowText,
                             trackColor = Color.LightGray,
+                            gapSize = (-15).dp,
+                            drawStopIndicator = {}
                         )
                     }
                 }
@@ -311,7 +314,6 @@ private fun RatingSection() {
             ) {
                 Column() {
                     Row(
-
                         verticalAlignment = Alignment.CenterVertically
                     ) {
 
@@ -323,7 +325,8 @@ private fun RatingSection() {
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = "Star",
-                            tint = YellowText
+                            tint = YellowText,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                     Spacer(Modifier.height(4.dp))
@@ -364,6 +367,7 @@ private fun ReviewSection() {
         ) {
             Text(
                 text = "Write a review",
+                color = DarkText,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -371,7 +375,7 @@ private fun ReviewSection() {
         Spacer(Modifier.height(16.dp))
 
         Text(
-            text = "Review this place",
+            text = "Reviews",
             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
         )
 

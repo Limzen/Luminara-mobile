@@ -1,6 +1,7 @@
 package com.example.luminara.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -38,10 +42,23 @@ fun ReviewCard() {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = "Kristin Watson",
-            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.W700)
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.avatar),
+                contentDescription = "Avatar",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(30.dp)                 // Set the size of the avatar
+                    .clip(CircleShape)           // Make it circular
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = "Kristin Watson",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
         Row {
             repeat(5) {
@@ -56,7 +73,7 @@ fun ReviewCard() {
 
 
     }
-    Spacer(modifier = Modifier.height(4.dp))
+    Spacer(modifier = Modifier.height(8.dp))
     Text(
         text = "A beautiful and peaceful place in the heart of Medan. " +
                 "The architecture is stunning with its blend of Middle Eastern, Indian, and Spanish styles. " +
@@ -64,12 +81,12 @@ fun ReviewCard() {
         style = MaterialTheme.typography.bodySmall,
         color = Color.DarkGray
     )
-    Spacer(modifier = Modifier.height(4.dp))
-    Row(
+    Spacer(modifier = Modifier.height(8.dp))
+    LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        repeat(4) {
+        items(8) { item ->
             Image(
                 painter = painterResource(R.drawable.mosque1),
                 contentDescription = "Review Image",
