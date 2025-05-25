@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.luminara.ui.theme.YellowText
 import kotlin.io.path.Path
 import kotlin.io.path.moveTo
 
@@ -33,7 +34,7 @@ import kotlin.io.path.moveTo
 fun StarRating(
     rating: Float,
     starSize: Dp = 12.dp,
-    starColor: Color = Color(0xFFFFC107),
+    starColor: Color = YellowText,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         for (i in 1..5) {
