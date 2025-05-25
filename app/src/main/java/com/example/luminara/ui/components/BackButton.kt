@@ -6,22 +6,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.luminara.ui.theme.BackbuttonArrow
 
 @Composable
-fun Buttonback(
+fun BackButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-
 ) {
     Button(
         onClick = onClick,
@@ -30,7 +27,8 @@ fun Buttonback(
             .height(40.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = BackbuttonArrow,
-            contentColor = Color.White,),
+            contentColor = Color.White
+        ), // Removed extra comma and parenthesis
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 10.dp,
             pressedElevation = 6.dp
@@ -39,19 +37,11 @@ fun Buttonback(
         contentPadding = PaddingValues(0.dp)
     ) {
         Icon(
-            Icons.Filled.KeyboardArrowLeft,
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             contentDescription = "ArrowLeft",
             modifier = Modifier.size(35.dp)
         )
     }
-
-
 }
 
 
-@Preview
-@Composable
-private fun view() {
-    Buttonback(onClick = {})
-
-}

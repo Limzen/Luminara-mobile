@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.luminara.ui.screens.home.GuideScreen
 import com.example.luminara.ui.screens.itinerary.CreateItinerary
 import com.example.luminara.ui.screens.home.HomeScreen
 import com.example.luminara.ui.screens.itinerary.DetailItinerary
+import com.example.luminara.ui.screens.home.SearchScreen
+import com.example.luminara.ui.screens.home.SiteDetailScreen
 import com.example.luminara.ui.screens.itinerary.FormItinerary
 import com.example.luminara.ui.screens.login.LoginScreen
 import com.example.luminara.ui.screens.signup.SignUpScreen
@@ -19,7 +22,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LuminaraTheme {
-               CreateItinerary()
+                GuideScreen()
             }
         }
     }

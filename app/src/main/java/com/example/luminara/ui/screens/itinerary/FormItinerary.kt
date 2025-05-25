@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.luminara.R
-import com.example.luminara.ui.components.Buttonback
+import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.components.ItineraryTextfield
 import com.example.luminara.ui.theme.BackbuttonArrow
 import com.example.luminara.ui.theme.DarkText
@@ -85,7 +85,7 @@ fun FormItinerary() {
                     .padding(vertical = 60.dp)
                     .padding(horizontal = 30.dp),
             ) {
-                Buttonback(onClick = {})
+                BackButton(onClick = {})
             }
 
             Row(

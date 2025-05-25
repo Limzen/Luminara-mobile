@@ -31,10 +31,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.luminara.R
-import com.example.luminara.ui.components.Buttonback
+import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.theme.DarkText
 import com.example.luminara.ui.theme.DetailIti
-import com.example.luminara.ui.theme.Gray
+import com.example.luminara.ui.theme.LightGray
 import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
@@ -76,7 +76,7 @@ private fun TopHeader(){
                 .padding(vertical = 60.dp)
                 .padding(horizontal = 20.dp),
         ) {
-            Buttonback(onClick = {})
+            BackButton(onClick = {})
         }
 
         Row(
@@ -320,7 +320,7 @@ private fun Notes() {
             .background(OnPrimary)
             .border(
                 width = 1.dp,
-                color = Gray,
+                color = LightGray,
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(16.dp)
