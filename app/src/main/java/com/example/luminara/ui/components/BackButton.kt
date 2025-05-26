@@ -19,10 +19,11 @@ import com.example.luminara.ui.theme.BackbuttonArrow
 @Composable
 fun BackButton(
     onClick: () -> Unit,
+    modifier : Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier
+        modifier = modifier
             .width(40.dp)
             .height(40.dp),
         colors = ButtonDefaults.buttonColors(

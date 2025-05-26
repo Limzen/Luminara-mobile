@@ -12,21 +12,54 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.luminara.ui.screens.home.bottomNavItems
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.luminara.R
+import com.example.luminara.navigation.NavItem
+import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.theme.LightBrown
 import com.example.luminara.ui.theme.Primary
+import androidx.compose.runtime.getValue
+import androidx.navigation.NavDestination.Companion.hierarchy
+
 
 @Composable
-fun BottomBar() {
+fun BottomBar(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    onNavigateToHome: () -> Unit,
+    onNavigateToItinerary: () -> Unit,
+    onNavigateToCommunity: () -> Unit,
+    onNavigateToChatbot: () -> Unit,
+    onNavigateToAccount: () -> Unit,
+) {
+    val selectedNavigationIndex = rememberSaveable {
+        mutableIntStateOf(0)
+    }
+    val bottomNavItems = listOf(
+        NavItem("Home", R.drawable.home_icon, Screen.Home, onNavigateToHome),
+        NavItem("Itinerary", R.drawable.itinerary_icon, Screen.Itinerary, onNavigateToItinerary),
+        NavItem("Community", R.drawable.community_icon, Screen.Community, onNavigateToCommunity),
+        NavItem("ChatBot", R.drawable.chatbot_icon, Screen.Chatbot, onNavigateToChatbot),
+        NavItem("Account", R.drawable.profile_icon, Screen.Account, onNavigateToAccount)
+    )
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
     Surface(
         tonalElevation = 4.dp,
         color = LightBrown,
@@ -37,14 +70,17 @@ fun BottomBar() {
             modifier = Modifier
                 .padding(vertical = 12.dp)
         ) {
-            bottomNavItems.forEach { item ->
-                val isSelected = item.label == "Home"
-
+            bottomNavItems.forEach {item ->
+                val isSelected = currentDestination?.hierarchy?.any {
+                    it.route == item.screen::class.qualifiedName
+                } == true
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
+                        .clickable {
+                            item.onClick()
+                        }
                         .clip(RoundedCornerShape(50))
-                        .clickable { }
                         .padding(horizontal = 8.dp, vertical = 3.dp)
                 ) {
                     Box(
@@ -57,13 +93,13 @@ fun BottomBar() {
                     ) {
                         Icon(
                             painter = painterResource(id = item.icon),
-                            contentDescription = item.label,
+                            contentDescription = item.title,
                             tint = if (isSelected) Color.White else Primary,
                             modifier = Modifier.size(24.dp) // Icon size remains fixed
                         )
                     }
                     Text(
-                        text = item.label,
+                        text = item.title,
                         style = MaterialTheme.typography.labelMedium,
                         color = Primary
                     )
