@@ -31,7 +31,6 @@ fun ChatSuggestionCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
-                    fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF3C2D1E)
                 )
                 Text(
