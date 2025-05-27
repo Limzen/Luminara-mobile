@@ -106,7 +106,8 @@ fun CommunityScreen() {
         ) }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .background(color = Primary)
                 .padding(innerPadding)
         ) {
@@ -181,7 +182,7 @@ private fun CommunityCard(community: Community) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Join Group",
+                        "View Group",
                         style = MaterialTheme.typography.bodySmall,
                         color = Primary
                     )
