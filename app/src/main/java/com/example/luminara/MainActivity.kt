@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.luminara.ui.screen.PasswordManagerScreen
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -33,6 +34,7 @@ import com.example.luminara.ui.screens.homesearch.SearchScreen
 import com.example.luminara.ui.screens.home.SiteDetailScreen
 import com.example.luminara.ui.screens.itinerary.FormItinerary
 import com.example.luminara.ui.screens.login.LoginScreen
+import com.example.luminara.ui.screens.profile.ChatBotScreen
 import com.example.luminara.ui.screens.profile.MyProfileScreen
 import com.example.luminara.ui.screens.signup.SignUpScreen
 import com.example.luminara.ui.screens.profile.ProfileScreen
