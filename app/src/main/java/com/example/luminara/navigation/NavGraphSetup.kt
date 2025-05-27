@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.luminara.ui.screens.home.HomeScreen
+import com.example.luminara.ui.screens.homesearch.SearchScreen
 import com.example.luminara.ui.screens.itinerary.CreateItinerary
 import com.example.luminara.ui.screens.profile.ProfileScreen
 
@@ -25,16 +26,14 @@ fun NavGraphSetup(
         modifier = modifier
     ) {
         composable(Screen.Home.route) {
-            HomeScreen()
+            SearchScreen()
         }
         composable(Screen.Itinerary.route) {
             CreateItinerary()
         }
         composable(Screen.Community.route) {
-            HomeScreen()
         }
         composable(Screen.Chatbot.route) {
-            HomeScreen()
         }
         composable(Screen.Account.route) {
             ProfileScreen()

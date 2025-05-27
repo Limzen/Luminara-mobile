@@ -33,13 +33,14 @@ import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.theme.LightBrown
 import com.example.luminara.ui.theme.Primary
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.scale
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 
 
 @Composable
 fun BottomBar(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
+    hierarchy: Sequence<NavDestination>?,
     onNavigateToHome: () -> Unit,
     onNavigateToItinerary: () -> Unit,
     onNavigateToCommunity: () -> Unit,
@@ -57,8 +58,6 @@ fun BottomBar(
         NavItem("Account", R.drawable.profile_icon, Screen.Account, onNavigateToAccount)
     )
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
 
     Surface(
         tonalElevation = 4.dp,
@@ -68,12 +67,10 @@ fun BottomBar(
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
-                .padding(vertical = 12.dp)
+                .padding(vertical = 10.dp)
         ) {
             bottomNavItems.forEach {item ->
-                val isSelected = currentDestination?.hierarchy?.any {
-                    it.route == item.screen::class.qualifiedName
-                } == true
+                val isSelected = item.title == "Home"
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
@@ -95,7 +92,9 @@ fun BottomBar(
                             painter = painterResource(id = item.icon),
                             contentDescription = item.title,
                             tint = if (isSelected) Color.White else Primary,
-                            modifier = Modifier.size(24.dp) // Icon size remains fixed
+                            modifier = if(item.title == "Home") Modifier
+                                .size(25.dp).scale(1.2f) else Modifier.size(25.dp).scale(1f)
+
                         )
                     }
                     Text(

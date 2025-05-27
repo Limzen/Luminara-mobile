@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,6 +43,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.luminara.R
 import com.example.luminara.domain.model.ReligionType
@@ -87,54 +92,74 @@ val religiousSites = listOf<ReligiousSite>(
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onNavigateToSearch : () -> Unit
+) {
+    val navController = rememberNavController()
     var searchQuery by remember { mutableStateOf("") }
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = BackgroundColor)
-    )
-    {
-        item{
-            TopHeader(
-                searchQuery = searchQuery,
-                onSearchQuery = {searchQuery = it}
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = Primary,
+        bottomBar = {
+            BottomBar(
+                hierarchy = navController.currentBackStackEntryAsState().value?.destination?.hierarchy,
+                onNavigateToHome = {},
+                onNavigateToItinerary = {},
+                onNavigateToCommunity = {},
+                onNavigateToChatbot = {},
+                onNavigateToAccount = {},
             )
         }
-        item{
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item{
-            FilterSection(title = "Discover Category", list = categories)
-        }
-        item{
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item{
-            FilterSection(title = "Distance", list = distance)
-        }
-        item{
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item{
-            ReligionTypeSection(list = religionTypes)
-        }
-        item{
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-        item{
-            PopularSection()
-        }
-        item{
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-        item{
-            RecommendedSection()
-        }
-        item{
-            Spacer(modifier = Modifier.height(40.dp))
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = BackgroundColor)
+                .padding(paddingValues)
+        )
+        {
+            item{
+                TopHeader(
+                    searchQuery = searchQuery,
+                    onSearchQuery = {searchQuery = it}
+                )
+            }
+            item{
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            item{
+                FilterSection(title = "Discover Category", list = categories)
+            }
+            item{
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            item{
+                FilterSection(title = "Distance", list = distance)
+            }
+            item{
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            item{
+                ReligionTypeSection(list = religionTypes)
+            }
+            item{
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+            item{
+                PopularSection()
+            }
+            item{
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+            item{
+                RecommendedSection()
+            }
+            item{
+                Spacer(modifier = Modifier.height(40.dp))
+            }
         }
     }
+
 }
 
 
@@ -149,7 +174,7 @@ private fun TopHeader(
                 .fillMaxWidth()
                 .height(250.dp)
                 .background(Primary)
-                .padding(start = Dimensions.OuterPadding, end = Dimensions.OuterPadding, top = 10.dp)
+                .padding(horizontal = Dimensions.OuterPadding)
         ) {
             Row(
                 modifier = Modifier

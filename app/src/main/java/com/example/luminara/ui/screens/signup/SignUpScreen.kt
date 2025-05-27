@@ -26,7 +26,10 @@ import com.example.luminara.ui.theme.BlueText
 
 
 @Composable
-fun SignUpScreen (){
+fun SignUpScreen (
+    onNavigateToMain: () -> Unit,
+    onNavigateUp: () -> Unit
+){
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }

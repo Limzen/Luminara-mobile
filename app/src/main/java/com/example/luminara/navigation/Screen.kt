@@ -9,4 +9,8 @@ sealed class Screen(val route: String) {
     data object Community: Screen("community")
     data object Chatbot: Screen("chatbot")
     data object Account: Screen("account")
+    data object LoginRoute: Screen("login")
+    data object SignUpRoute: Screen("signup")
+    data object SearchRoute: Screen("search")
+    data object MainRoute: Screen("main")
 }
