@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -18,10 +19,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import com.example.luminara.R
 import com.example.luminara.ui.components.AuthButton
+import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.components.ItineraryTextfield
+import com.example.luminara.ui.theme.BackbuttonArrow
+import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Primary
+import com.example.luminara.utils.Dimensions
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordManagerScreen() {
     var currentPassword by remember { mutableStateOf("") }
@@ -32,54 +38,37 @@ fun PasswordManagerScreen() {
     var newPasswordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        // Header
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .background(color = Primary)
-        ) {
-            Text(
-                text = "Password Manager",
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 38.dp, start =30.dp)
-            )
-
-            Box(
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 32.dp)
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFA56533))
-                    .clickable {  },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color.White
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Password Manager",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        color = Color.White
+                    )
+                },
+                navigationIcon = {
+                    BackButton(
+                        onClick = {},
+                        modifier = Modifier.padding(start = Dimensions.OuterPadding)
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Primary,
+                    navigationIconContentColor = Color.White,
+                    titleContentColor = Color.White
                 )
-            }
+            )
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
+    ) { innerPadding ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(Dimensions.OuterPadding)
+                .background(BackgroundColor)
         ) {
-            // Current Password
             ItineraryTextfield(
                 value = currentPassword,
                 onValueChange = { currentPassword = it },
@@ -133,6 +122,7 @@ fun PasswordManagerScreen() {
                 singleLine = true
             )
 
+            Spacer(Modifier.height(8.dp))
             // Confirm Password
             ItineraryTextfield(
                 value = confirmPassword,
@@ -156,29 +146,25 @@ fun PasswordManagerScreen() {
             )
 
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {},
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Primary,
+                    contentColor = OnPrimary
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.TopEnd
+                )
             ) {
-                Button(
-                    onClick = {},
-
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Primary,
-                        contentColor = OnPrimary
-
-                    )
-                ) {
-                    Text(
-                        "Change Password",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Text(
+                    "Change Password",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
             }
+
+
         }
     }
+
 }
