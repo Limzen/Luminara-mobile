@@ -23,6 +23,7 @@ import com.example.luminara.navigation.Screen
 import com.example.luminara.navigation.navigateToSingleTop
 import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.screen.PasswordManagerScreen
+import com.example.luminara.ui.screens.community.CommunityDetailScreen
 import com.example.luminara.ui.screens.community.CommunityScreen
 import com.example.luminara.ui.screens.home.GuideScreen
 import com.example.luminara.ui.screens.itinerary.CreateItinerary
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             LuminaraTheme {
-                CommunityScreen()
+                CommunityDetailScreen()
             }
         }
     }
