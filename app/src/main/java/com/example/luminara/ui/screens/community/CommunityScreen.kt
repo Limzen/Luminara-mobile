@@ -2,6 +2,7 @@ package com.example.luminara.ui.screens.community
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -50,11 +51,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.luminara.R
 import com.example.luminara.domain.model.Community
+import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.components.SearchResult
 import com.example.luminara.ui.theme.BackbuttonArrow
@@ -66,8 +69,9 @@ import com.example.luminara.utils.Dimensions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommunityScreen() {
-    val navController = rememberNavController()
+fun CommunityScreen(
+    navController: NavController
+) {
     val filterItems = listOf("Agama", "Kegiatan", "Lokasi")
     val communityList = listOf(
         Community("Al-Mashun Community", R.drawable.mosque1),
@@ -96,14 +100,7 @@ fun CommunityScreen() {
                 )
             )
         },
-        bottomBar = { BottomBar(
-            hierarchy = navController.currentBackStackEntryAsState().value?.destination?.hierarchy,
-            onNavigateToHome = {},
-            onNavigateToItinerary = {},
-            onNavigateToCommunity = {},
-            onNavigateToChatbot = {},
-            onNavigateToAccount = {},
-        ) }
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -142,7 +139,7 @@ fun CommunityScreen() {
                         contentPadding = PaddingValues(Dimensions.OuterPadding)
                     ) {
                         items(communityList) {community ->
-                            CommunityCard(community)
+                            CommunityCard(community, onClick = {navController.navigate(Screen.CommunityDetail.route)})
                         }
                     }
                 }
@@ -152,11 +149,12 @@ fun CommunityScreen() {
 }
 
 @Composable
-private fun CommunityCard(community: Community) {
+private fun CommunityCard(community: Community, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1f),
+            .aspectRatio(1f)
+            .clickable{onClick()},
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
             containerColor = CreamyBrown

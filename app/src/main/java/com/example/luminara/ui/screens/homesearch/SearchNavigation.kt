@@ -6,14 +6,14 @@ import androidx.navigation.compose.composable
 import com.example.luminara.navigation.Screen
 
 
-fun NavGraphBuilder.searchScreen(
+//fun NavGraphBuilder.searchScreen(
 
-) {
-    composable(Screen.Home.route) {
-        SearchScreen()
-    }
-}
+//) {
+  //  composable(Screen.Home.route) {
+    //    SearchScreen()
+    //}
+// }
 
 fun NavController.navigateToSearch() {
-    navigate(Screen.MainRoute.route)
+    // navigate(Screen.MainRoute.route)
 }

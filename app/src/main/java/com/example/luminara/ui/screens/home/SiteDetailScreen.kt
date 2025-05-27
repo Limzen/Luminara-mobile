@@ -39,7 +39,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.luminara.R
+import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.components.ReviewCard
 import com.example.luminara.ui.theme.BackgroundColor
@@ -49,7 +51,9 @@ import com.example.luminara.ui.theme.YellowText
 import com.example.luminara.utils.Dimensions
 
 @Composable
-fun SiteDetailScreen() {
+fun SiteDetailScreen(
+    navController: NavController,
+) {
     val imageHeightCollapsed = 80.dp
     val imageHeightExpanded = 250.dp
     val cornerRadius = 20.dp
@@ -79,6 +83,9 @@ fun SiteDetailScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(color = Primary)
+            .padding(
+                PaddingValues(top = 0.dp)
+            )
     ) {
         // Header Image
         Box(
@@ -104,7 +111,7 @@ fun SiteDetailScreen() {
                         top = 15.dp
                     )
             ) {
-                BackButton(onClick = {})
+                BackButton(onClick = {navController.popBackStack()})
             }
         }
 
@@ -133,7 +140,7 @@ fun SiteDetailScreen() {
                     Spacer(Modifier.height(12.dp))
                 }
                 item {
-                    ButtonActionSection()
+                    ButtonActionSection(onViewEthics = {navController.navigate(Screen.Guide.route)})
                 }
                 item {
                     Spacer(Modifier.height(16.dp))
@@ -215,14 +222,14 @@ private fun TopHeader() {
 }
 
 @Composable
-private fun ButtonActionSection() {
+private fun ButtonActionSection(onViewEthics : () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(28.dp)
     ) {
         Button(
             modifier = Modifier.weight(1f),
-            onClick = {},
+            onClick = {onViewEthics()},
             colors = ButtonDefaults.buttonColors(
                 containerColor = Primary,
                 contentColor = Color.White

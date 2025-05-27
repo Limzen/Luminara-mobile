@@ -20,14 +20,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.AuthButton
 import com.example.luminara.ui.components.AuthTextField
 import com.example.luminara.ui.theme.BlueText
 
 @Composable
 fun LoginScreen(
-    onNavigateToMain: () -> Unit,
-    onNavigateToSignUp: () -> Unit
+    navController: NavController
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -92,7 +93,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         AuthButton(
-            onClick = { onNavigateToMain() },
+            onClick = { navController.navigate(Screen.Home.route) },
             text = "Login",
         )
 
@@ -115,7 +116,7 @@ fun LoginScreen(
                 color = BlueText,
                 modifier = Modifier
                     .clickable{
-                        onNavigateToSignUp()
+                        navController.navigate(Screen.SignUp.route)
                     }
             )
         }

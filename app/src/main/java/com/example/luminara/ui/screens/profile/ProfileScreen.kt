@@ -27,12 +27,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.theme.Primary
 
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    navController: NavController
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -91,10 +95,10 @@ fun ProfileScreen() {
 
 
 
-        ProfileMenuItem(icon = Icons.Default.Person, text = "My Profile")
-        ProfileMenuItem(icon = Icons.Default.Lock, text = "Password Manager")
-        ProfileMenuItem(icon = Icons.Default.Face, text = "ChatBot")
-        ProfileMenuItem(icon = Icons.AutoMirrored.Filled.ExitToApp, text = "Log Out")
+        ProfileMenuItem(icon = Icons.Default.Person, text = "My Profile", onClick = {navController.navigate(
+            Screen.MyProfile.route)})
+        ProfileMenuItem(icon = Icons.Default.Lock, text = "Password Manager", onClick = {navController.navigate(Screen.PasswordManager.route)})
+        ProfileMenuItem(icon = Icons.AutoMirrored.Filled.ExitToApp, text = "Log Out", onClick = {})
     }
 }
 
@@ -103,7 +107,7 @@ fun ProfileScreen() {
 
 
 @Composable
-fun ProfileMenuItem(icon: ImageVector, text: String) {
+fun ProfileMenuItem(icon: ImageVector, text: String, onClick : () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -112,7 +116,7 @@ fun ProfileMenuItem(icon: ImageVector, text: String) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {  }
+                .clickable { onClick() }
                 .padding(horizontal = 24.dp, vertical = 24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

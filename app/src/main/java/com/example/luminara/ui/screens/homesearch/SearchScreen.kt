@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.luminara.R
 import com.example.luminara.domain.model.ReligiousSite
 import com.example.luminara.ui.components.BackButton
@@ -32,7 +33,10 @@ import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
 
 @Composable
-fun SearchScreen() {
+fun SearchScreen(
+    navController: NavController,
+    innerPadding: PaddingValues
+) {
     val religiousSites = listOf<ReligiousSite>(
         ReligiousSite(
             id = 1,
@@ -131,6 +135,9 @@ fun SearchScreen() {
 //    }
     Column(
         modifier = Modifier.Companion.fillMaxSize()
+            .padding(
+                PaddingValues(top = innerPadding.calculateTopPadding())
+            )
             .background(color = Primary)
     ) {
         Row(
@@ -138,12 +145,13 @@ fun SearchScreen() {
                 .background(color = Primary)
                 .padding(horizontal = Dimensions.OuterPadding)
         ) {
-            BackButton(onClick = {})
+            BackButton(onClick = {navController.popBackStack()})
             Spacer(Modifier.Companion.width(10.dp))
             SearchTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = "Where to go?"
+                placeholder = "Where to go?",
+                onClick = {}
             )
         }
         Spacer(Modifier.Companion.height(12.dp))

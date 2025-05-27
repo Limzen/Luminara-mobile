@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
+import androidx.navigation.NavController
 import com.example.luminara.R
 import com.example.luminara.ui.components.AuthButton
 import com.example.luminara.ui.components.BackButton
@@ -29,7 +30,9 @@ import com.example.luminara.utils.Dimensions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordManagerScreen() {
+fun PasswordManagerScreen(
+    navController: NavController
+) {
     var currentPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -50,7 +53,7 @@ fun PasswordManagerScreen() {
                 },
                 navigationIcon = {
                     BackButton(
-                        onClick = {},
+                        onClick = {navController.popBackStack()},
                         modifier = Modifier.padding(start = Dimensions.OuterPadding)
                     )
                 },

@@ -1,6 +1,7 @@
 package com.example.luminara.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,14 +21,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.luminara.R
+import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.theme.Primary
 
 @Composable
-fun VerticalSitesCard() {
+fun VerticalSitesCard(
+    navController: NavController
+) {
     Card(
         modifier = Modifier
-            .size(160.dp, 210.dp),
+            .size(160.dp, 210.dp)
+            .clickable(
+                onClick = { navController.navigate(Screen.SiteDetail.route) }
+            ),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),

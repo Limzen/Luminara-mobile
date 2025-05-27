@@ -39,25 +39,18 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 
 
 @Composable
-fun BottomBar(
-    hierarchy: Sequence<NavDestination>?,
-    onNavigateToHome: () -> Unit,
-    onNavigateToItinerary: () -> Unit,
-    onNavigateToCommunity: () -> Unit,
-    onNavigateToChatbot: () -> Unit,
-    onNavigateToAccount: () -> Unit,
-) {
-    val selectedNavigationIndex = rememberSaveable {
-        mutableIntStateOf(0)
-    }
+fun BottomBar(navController: NavController) {
+
     val bottomNavItems = listOf(
-        NavItem("Home", R.drawable.home_icon, Screen.Home, onNavigateToHome),
-        NavItem("Itinerary", R.drawable.itinerary_icon, Screen.Itinerary, onNavigateToItinerary),
-        NavItem("Community", R.drawable.community_icon, Screen.Community, onNavigateToCommunity),
-        NavItem("ChatBot", R.drawable.chatbot_icon, Screen.Chatbot, onNavigateToChatbot),
-        NavItem("Account", R.drawable.profile_icon, Screen.Account, onNavigateToAccount)
+        NavItem("Home", R.drawable.home_icon, Screen.Home),
+        NavItem("Itinerary", R.drawable.itinerary_icon, Screen.Itinerary),
+        NavItem("Community", R.drawable.community_icon, Screen.Community,),
+        NavItem("ChatBot", R.drawable.chatbot_icon, Screen.Chatbot),
+        NavItem("Account", R.drawable.profile_icon, Screen.Account)
     )
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     Surface(
         tonalElevation = 4.dp,
@@ -70,12 +63,12 @@ fun BottomBar(
                 .padding(vertical = 10.dp)
         ) {
             bottomNavItems.forEach {item ->
-                val isSelected = item.title == "Home"
+                val isSelected = currentRoute == item.screen.route
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .clickable {
-                            item.onClick()
+                            navController.navigate(item.screen.route)
                         }
                         .clip(RoundedCornerShape(50))
                         .padding(horizontal = 8.dp, vertical = 3.dp)

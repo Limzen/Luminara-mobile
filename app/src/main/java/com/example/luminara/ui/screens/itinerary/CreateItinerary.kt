@@ -1,5 +1,6 @@
 package com.example.luminara.ui.screens.itinerary
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,7 +30,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.luminara.domain.model.Itinerary
+import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.components.ListItinerary
 import com.example.luminara.ui.theme.OnPrimary
@@ -37,21 +40,18 @@ import com.example.luminara.ui.theme.Primary
 
 
 @Composable
-fun CreateItinerary() {
+fun CreateItinerary(
+    navController: NavController,
+    innerPadding: PaddingValues
+) {
     val itineraries = listOf(
         Itinerary("Today", "Nama Itinerary", "Masjid agung"),
         Itinerary("14 Mei 2025", "Nama Itinerary", "Masjid nurul huda"),
         Itinerary("13 Mei 2025", "Nama Itinerary", "Graha Maria Annai Velangkani"),
         Itinerary("12 Mei 2025", "Nama Itinerary", "Masjid agung"),
-        Itinerary("11 Mei 2025", "Nama Itinerary", "Masjid raya"),
     )
 
-    Scaffold(
-        containerColor = Color.White,
-        bottomBar = {
 
-        }
-    ) { innerPadding ->
 
         Column(
             modifier = Modifier
@@ -107,7 +107,9 @@ fun CreateItinerary() {
                         Icon(
                             Icons.Filled.Add,
                             contentDescription = "Add",
-                            modifier = Modifier.size(30.dp)
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clickable( onClick = {navController.navigate(Screen.FormItinerary.route)})
                         )
                     }
                     Spacer(modifier = Modifier.width(6.dp))
@@ -140,7 +142,7 @@ fun CreateItinerary() {
                     items(itineraries.size) { index ->
                         val item = itineraries[index]
                         ListItinerary(
-                            onClick = {},
+                            onClick = {navController.navigate(Screen.DetailItinerary.route)},
                             itineraryDate = item.date,
                             itineraryName = item.name,
                             destinationItinerary = item.destination
@@ -150,7 +152,6 @@ fun CreateItinerary() {
                 }
             }
         }
-    }
 }
 
 

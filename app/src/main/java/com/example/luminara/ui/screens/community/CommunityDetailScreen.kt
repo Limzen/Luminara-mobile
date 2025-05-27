@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.theme.BackgroundColor
@@ -40,8 +41,9 @@ import com.example.luminara.utils.Dimensions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommunityDetailScreen(modifier: Modifier = Modifier) {
-    val navController = rememberNavController()
+fun CommunityDetailScreen(
+    navController: NavController
+) {
     val navBarPadding = WindowInsets.navigationBars.asPaddingValues()
 
     Scaffold(
@@ -50,7 +52,7 @@ fun CommunityDetailScreen(modifier: Modifier = Modifier) {
                 title = {},
                 navigationIcon = {
                     BackButton(
-                        onClick = {},
+                        onClick = {navController.popBackStack()},
                         modifier = Modifier.padding(start = Dimensions.OuterPadding)
                     )
                 },

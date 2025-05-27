@@ -9,11 +9,11 @@ import com.example.luminara.navigation.Screen
 fun NavGraphBuilder.homeScreen(
     onNavigateToSearch: () -> Unit,
 ) {
-    composable(Screen.Home.route) {
-        HomeScreen(
-            onNavigateToSearch = onNavigateToSearch,
-        )
-    }
+   // composable(Screen.Home.route) {
+    //    HomeScreen(
+    //        onNavigateToSearch = onNavigateToSearch,
+    //    )
+  //  }
 }
 
 fun NavController.navigateToHome() {

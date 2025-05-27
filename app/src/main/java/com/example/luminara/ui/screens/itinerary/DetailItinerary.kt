@@ -30,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.luminara.R
 import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.theme.DarkText
@@ -40,11 +41,15 @@ import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
 
 @Composable
-fun DetailItinerary() {
+fun DetailItinerary(
+    navController: NavController
+) {
 
     Box (
 
-    ){ TopHeader() }
+    ){ TopHeader(
+        navController = navController
+    ) }
 
     Box(
         modifier = Modifier.padding(top = 120.dp)
@@ -63,7 +68,9 @@ fun DetailItinerary() {
 
 
 @Composable
-private fun TopHeader(){
+private fun TopHeader(
+    navController: NavController
+){
     Box(
         modifier = Modifier
             .height(165.dp)
@@ -76,7 +83,7 @@ private fun TopHeader(){
                 .padding(vertical = 60.dp)
                 .padding(horizontal = 20.dp),
         ) {
-            BackButton(onClick = {})
+            BackButton(onClick = {navController.popBackStack()})
         }
 
         Row(

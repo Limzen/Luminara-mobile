@@ -4,5 +4,4 @@ data class NavItem(
     val title: String,
     val icon: Int,
     val screen: Screen,
-    val onClick: () -> Unit
 )

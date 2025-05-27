@@ -2,6 +2,7 @@ package com.example.luminara.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,7 +28,8 @@ import com.example.luminara.ui.theme.OnPrimary
 fun SearchTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String
+    placeholder: String,
+    onClick: () -> Unit
 ) {
     BasicTextField(
         value = value,
@@ -54,6 +56,9 @@ fun SearchTextField(
                     modifier = Modifier
                         .size(30.dp)
                         .padding(end = 8.dp)
+                        .clickable(
+                            onClick = onClick
+                            ),
                 )
                 if(value.isEmpty()) {
                     Text(

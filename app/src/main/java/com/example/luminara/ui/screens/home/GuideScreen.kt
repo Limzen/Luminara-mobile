@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.luminara.R
 import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.theme.BackgroundColor
@@ -35,7 +36,9 @@ import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
 
 @Composable
-fun GuideScreen() {
+fun GuideScreen(
+    navController: NavController
+) {
     val imageHeightCollapsed = 80.dp
     val imageHeightExpanded = 250.dp
     val cornerRadius = 20.dp
@@ -88,7 +91,7 @@ fun GuideScreen() {
                         top = 15.dp
                     )
             ) {
-                BackButton(onClick = {})
+                BackButton(onClick = {navController.popBackStack()})
             }
         }
 

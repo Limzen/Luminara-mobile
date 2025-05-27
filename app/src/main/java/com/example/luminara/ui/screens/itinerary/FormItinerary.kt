@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.luminara.R
 import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.components.ItineraryTextfield
@@ -34,7 +35,9 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormItinerary() {
+fun FormItinerary(
+    navController: NavController
+) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
 
@@ -85,7 +88,7 @@ fun FormItinerary() {
                     .padding(vertical = 60.dp)
                     .padding(horizontal = 30.dp),
             ) {
-                BackButton(onClick = {})
+                BackButton(onClick = {navController.popBackStack()})
             }
 
             Row(

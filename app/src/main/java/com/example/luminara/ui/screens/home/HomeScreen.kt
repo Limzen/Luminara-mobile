@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -43,6 +44,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -93,35 +95,25 @@ val religiousSites = listOf<ReligiousSite>(
 
 @Composable
 fun HomeScreen(
-    onNavigateToSearch : () -> Unit
+    navController: NavController,
+    innerPadding: PaddingValues
 ) {
-    val navController = rememberNavController()
     var searchQuery by remember { mutableStateOf("") }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = Primary,
-        bottomBar = {
-            BottomBar(
-                hierarchy = navController.currentBackStackEntryAsState().value?.destination?.hierarchy,
-                onNavigateToHome = {},
-                onNavigateToItinerary = {},
-                onNavigateToCommunity = {},
-                onNavigateToChatbot = {},
-                onNavigateToAccount = {},
-            )
-        }
-    ) { paddingValues ->
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(
+                    PaddingValues(top = innerPadding.calculateTopPadding())
+                )
                 .background(color = BackgroundColor)
-                .padding(paddingValues)
         )
         {
             item{
                 TopHeader(
                     searchQuery = searchQuery,
-                    onSearchQuery = {searchQuery = it}
+                    onSearchQuery = {searchQuery = it},
+                    navController = navController
                 )
             }
             item{
@@ -146,7 +138,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
             item{
-                PopularSection()
+                PopularSection(navController = navController)
             }
             item{
                 Spacer(modifier = Modifier.height(12.dp))
@@ -158,7 +150,6 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(40.dp))
             }
         }
-    }
 
 }
 
@@ -166,7 +157,8 @@ fun HomeScreen(
 @Composable
 private fun TopHeader(
     searchQuery: String,
-    onSearchQuery: (String) -> Unit
+    onSearchQuery: (String) -> Unit,
+    navController: NavController
 ) {
     Box {
         Column(
@@ -201,7 +193,12 @@ private fun TopHeader(
                 Icon(Icons.Default.ArrowDropDown, contentDescription = "Lang")
             }
             Spacer(modifier = Modifier.height(10.dp))
-            SearchTextField(value = searchQuery, onValueChange = onSearchQuery, placeholder = "Where to go?")
+            SearchTextField(
+                value = searchQuery,
+                onValueChange = onSearchQuery,
+                placeholder = "Where to go?",
+                onClick = {navController.navigate(Screen.HomeSearch.route)}
+            )
         }
 
         Box(
@@ -294,7 +291,9 @@ private fun ReligionTypeSection(list: List<ReligionType>) {
 }
 
 @Composable
-private fun PopularSection() {
+private fun PopularSection(
+    navController: NavController
+) {
     Column(
         modifier = Modifier
             .padding(horizontal = Dimensions.OuterPadding)
@@ -307,7 +306,7 @@ private fun PopularSection() {
         ) {
             religiousSites.forEach { site ->
                 item {
-                    VerticalSitesCard()
+                    VerticalSitesCard(navController = navController)
                 }
             }
         }

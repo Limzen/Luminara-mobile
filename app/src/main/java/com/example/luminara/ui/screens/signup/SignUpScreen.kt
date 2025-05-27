@@ -20,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.AuthButton
 import com.example.luminara.ui.components.AuthTextField
 import com.example.luminara.ui.theme.BlueText
@@ -27,8 +29,7 @@ import com.example.luminara.ui.theme.BlueText
 
 @Composable
 fun SignUpScreen (
-    onNavigateToMain: () -> Unit,
-    onNavigateUp: () -> Unit
+    navController: NavController
 ){
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -128,7 +129,9 @@ fun SignUpScreen (
                 style = MaterialTheme.typography.titleSmall,
                 color = BlueText,
                 modifier = Modifier
-                    .clickable {}
+                    .clickable {
+                        navController.navigate(Screen.Login.route)
+                    }
             )
 
 

@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 import com.example.luminara.R
 import com.example.luminara.ui.components.BackButton
@@ -48,7 +49,9 @@ import com.example.luminara.utils.Dimensions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyProfileScreen() {
+fun MyProfileScreen(
+    navController: NavController
+) {
     // Form Inputs
     var name by remember { mutableStateOf("Cristie Wanna") }
     var religion by remember { mutableStateOf("") }
@@ -76,7 +79,7 @@ fun MyProfileScreen() {
                 },
                 navigationIcon = {
                    BackButton(
-                       onClick = {},
+                       onClick = {navController.popBackStack()},
                        modifier = Modifier.padding(start = Dimensions.OuterPadding)
                    )
                 },
