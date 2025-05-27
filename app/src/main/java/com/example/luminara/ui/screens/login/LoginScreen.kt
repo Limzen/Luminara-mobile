@@ -25,7 +25,10 @@ import com.example.luminara.ui.components.AuthTextField
 import com.example.luminara.ui.theme.BlueText
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onNavigateToMain: () -> Unit,
+    onNavigateToSignUp: () -> Unit
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -89,7 +92,7 @@ fun LoginScreen() {
         Spacer(modifier = Modifier.height(32.dp))
 
         AuthButton(
-            onClick = { /* TODO */ },
+            onClick = { onNavigateToMain() },
             text = "Login",
         )
 
@@ -111,7 +114,9 @@ fun LoginScreen() {
                 style = MaterialTheme.typography.titleSmall,
                 color = BlueText,
                 modifier = Modifier
-                    .clickable{}
+                    .clickable{
+                        onNavigateToSignUp()
+                    }
             )
         }
 

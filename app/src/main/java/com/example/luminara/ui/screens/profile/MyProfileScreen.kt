@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.example.luminara.R
-import com.example.luminara.domain.model.BackButton
+import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.components.AuthButton
 import com.example.luminara.ui.components.AuthTextField
 import com.example.luminara.ui.components.ItineraryTextfield

@@ -2,7 +2,6 @@ package com.example.luminara.ui.screens.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -11,23 +10,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,10 +43,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.luminara.R
-import com.example.luminara.domain.model.BottomNavItem
 import com.example.luminara.domain.model.ReligionType
 import com.example.luminara.domain.model.ReligiousSite
+import com.example.luminara.navigation.NavItem
+import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.components.HomeFilterChip
 import com.example.luminara.ui.components.HorizontalSitesCard
@@ -56,7 +58,6 @@ import com.example.luminara.ui.components.ReligionTypeChip
 import com.example.luminara.ui.components.SearchTextField
 import com.example.luminara.ui.components.VerticalSitesCard
 import com.example.luminara.ui.theme.BackgroundColor
-import com.example.luminara.ui.theme.LightBrown
 import com.example.luminara.ui.theme.MiniHeading
 import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Primary
@@ -89,20 +90,26 @@ val religiousSites = listOf<ReligiousSite>(
     ReligiousSite(id = 4, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim",image = R.drawable.mosque1,time = "07:00-19.30"),
 )
 
-val bottomNavItems = listOf(
-    BottomNavItem("Home", R.drawable.home_icon, "home"),
-    BottomNavItem("Itinerary", R.drawable.itinerary_icon, "itinerary"),
-    BottomNavItem("Community", R.drawable.community_icon, "community"),
-    BottomNavItem("ChatBot", R.drawable.chatbot_icon, "chatbot"),
-    BottomNavItem("Account", R.drawable.profile_icon, "account")
-)
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onNavigateToSearch : () -> Unit
+) {
+    val navController = rememberNavController()
     var searchQuery by remember { mutableStateOf("") }
-
     Scaffold(
-        bottomBar = { BottomBar() }
+        modifier = Modifier.fillMaxSize(),
+        containerColor = Primary,
+        bottomBar = {
+            BottomBar(
+                hierarchy = navController.currentBackStackEntryAsState().value?.destination?.hierarchy,
+                onNavigateToHome = {},
+                onNavigateToItinerary = {},
+                onNavigateToCommunity = {},
+                onNavigateToChatbot = {},
+                onNavigateToAccount = {},
+            )
+        }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -155,46 +162,47 @@ fun HomeScreen() {
 
 }
 
+
 @Composable
 private fun TopHeader(
     searchQuery: String,
     onSearchQuery: (String) -> Unit
 ) {
     Box {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .background(Primary)
-            .padding(start = Dimensions.OuterPadding, end = Dimensions.OuterPadding, top = 10.dp)
-    ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .height(250.dp)
+                .background(Primary)
+                .padding(horizontal = Dimensions.OuterPadding)
         ) {
-            Column {
-                Text(
-                    text = "Hi, Cristie",
-                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                    fontWeight = FontWeight.Bold,
-                    color = OnPrimary
-                )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.LocationOn,
-                        contentDescription = "Location",
-                        tint = YellowText
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "Hi, Cristie",
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        fontWeight = FontWeight.Bold,
+                        color = OnPrimary
                     )
-                    Text("My Location", fontSize = 14.sp, color = YellowText)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "Location",
+                            tint = YellowText
+                        )
+                        Text("My Location", fontSize = 14.sp, color = YellowText)
+                    }
                 }
+                Icon(Icons.Default.ArrowDropDown, contentDescription = "Lang")
             }
-            Icon(Icons.Default.ArrowDropDown, contentDescription = "Lang")
+            Spacer(modifier = Modifier.height(10.dp))
+            SearchTextField(value = searchQuery, onValueChange = onSearchQuery, placeholder = "Where to go?")
         }
-        Spacer(modifier = Modifier.height(10.dp))
-        SearchTextField(value = searchQuery, onValueChange = onSearchQuery, placeholder = "Where to go?")
-    }
 
         Box(
             modifier = Modifier
@@ -223,7 +231,7 @@ private fun TopHeader(
                     .padding(4.dp)
             )
         }
-}
+    }
 }
 
 @Composable

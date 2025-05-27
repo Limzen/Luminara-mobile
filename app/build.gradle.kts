@@ -73,4 +73,7 @@ dependencies {
 
     //fonts
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation( libs.androidx.navigation.compose)
+
+    implementation(libs.kotlinx.serialization.json)
 }

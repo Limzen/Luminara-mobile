@@ -49,7 +49,7 @@ fun CreateItinerary() {
     Scaffold(
         containerColor = Color.White,
         bottomBar = {
-            BottomBar()
+
         }
     ) { innerPadding ->
 
