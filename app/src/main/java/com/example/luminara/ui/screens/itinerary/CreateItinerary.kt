@@ -1,6 +1,9 @@
 package com.example.luminara.ui.screens.itinerary
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,31 +16,69 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.luminara.R
 import com.example.luminara.domain.model.Itinerary
 import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.components.ListItinerary
+import com.example.luminara.ui.components.SearchTextField
+import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Primary
+import com.example.luminara.utils.Dimensions
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ItineraryTopBar(
+    navController: NavController
+) {
+    TopAppBar(
+        title = {
+            Text(
+                text = "Itinerary",
+                fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                fontWeight = FontWeight.Bold,
+                color = OnPrimary,
+                textAlign = TextAlign.Center
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Primary
+        ),
+    )
+}
 
 @Composable
 fun CreateItinerary(
@@ -50,109 +91,87 @@ fun CreateItinerary(
         Itinerary("13 Mei 2025", "Nama Itinerary", "Graha Maria Annai Velangkani"),
         Itinerary("12 Mei 2025", "Nama Itinerary", "Masjid agung"),
     )
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                PaddingValues(top = innerPadding.calculateTopPadding(), bottom = innerPadding.calculateBottomPadding())
+            )
+            .background(color = BackgroundColor)
+    ) {
+        item {
+            Spacer(Modifier.height(Dimensions.TopBottomPadding))
+        }
+        items(itineraries) { itinerary ->
+           ItineraryCard(
+               navController = navController
+           )
+        }
+        item {
+            Spacer(Modifier.height(Dimensions.TopBottomPadding))
+        }
+    }
+}
 
-
-
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-        ) {
-            // Header
-            Column(
+@Composable
+private fun ItineraryCard(
+    navController: NavController
+) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier = Modifier
+            .padding(horizontal = Dimensions.OuterPadding)
+            .padding(bottom = 12.dp)
+            .fillMaxWidth(),
+        onClick = {
+            navController.navigate(Screen.DetailItinerary.route)
+        },
+        colors = CardDefaults.cardColors(
+            containerColor = BackgroundColor
+        )
+    ) {
+        Column {
+            Image(
+                painter = painterResource(id = R.drawable.mosque1) ,
+                contentDescription = "Location",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .height(180.dp)
                     .fillMaxWidth()
-                    .padding(vertical = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "TRAVEL ITINERARY",
-                    style = MaterialTheme.typography.titleLarge ,
-                    fontWeight = FontWeight.Bold
+                    text = "Medan Trip",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    modifier =  Modifier.padding(horizontal = 16.dp)
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                androidx.compose.foundation.Canvas(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp)
-                        .height(2.dp)
-                ) {
-                    drawLine(
-                        color = Primary,
-                        start = androidx.compose.ui.geometry.Offset(0f, 0f),
-                        end = androidx.compose.ui.geometry.Offset(size.width, 0f),
-                        strokeWidth = size.height
+                IconButton(onClick = { /* TODO */ }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "More options"
                     )
                 }
             }
+            Text(
+                text = "Dec 12 - Dec 14 2023 . A couple . Luxury",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
 
-            // Tombol
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 24.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Button(
-                        onClick = {},
-                        modifier = Modifier.size(30.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Primary,
-                            contentColor = Color.White,
-                        ),
-                        shape = CircleShape,
-                        contentPadding = PaddingValues(0.dp)
-                    ) {
-                        Icon(
-                            Icons.Filled.Add,
-                            contentDescription = "Add",
-                            modifier = Modifier
-                                .size(30.dp)
-                                .clickable( onClick = {navController.navigate(Screen.FormItinerary.route)})
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("Create itinerary", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-            }
-
-
-            if (itineraries.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 20.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "haven't had a travel plan yet",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(horizontal = 18.dp)
-                        .fillMaxSize()
-                ) {
-                    items(itineraries.size) { index ->
-                        val item = itineraries[index]
-                        ListItinerary(
-                            onClick = {navController.navigate(Screen.DetailItinerary.route)},
-                            itineraryDate = item.date,
-                            itineraryName = item.name,
-                            destinationItinerary = item.destination
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
-                }
-            }
+            Spacer(modifier = Modifier.height(12.dp))
         }
+    }
 }
+
+
 
 
 

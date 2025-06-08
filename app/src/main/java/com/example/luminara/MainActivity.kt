@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import com.example.luminara.ui.screen.PasswordManagerScreen
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -16,6 +17,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,10 +35,12 @@ import com.example.luminara.ui.screens.community.CommunityScreen
 import com.example.luminara.ui.screens.home.GuideScreen
 import com.example.luminara.ui.screens.itinerary.CreateItinerary
 import com.example.luminara.ui.screens.home.HomeScreen
+import com.example.luminara.ui.screens.home.HomeTopBar
 import com.example.luminara.ui.screens.itinerary.DetailItinerary
 import com.example.luminara.ui.screens.homesearch.SearchScreen
 import com.example.luminara.ui.screens.home.SiteDetailScreen
 import com.example.luminara.ui.screens.itinerary.FormItinerary
+import com.example.luminara.ui.screens.itinerary.ItineraryTopBar
 import com.example.luminara.ui.screens.login.LoginScreen
 import com.example.luminara.ui.screens.profile.ChatBotScreen
 import com.example.luminara.ui.screens.profile.MyProfileScreen
@@ -49,23 +54,26 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge(
-        )
+
+        enableEdgeToEdge()
         setContent {
             LuminaraTheme {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
 
-                val screen = allScreens.find { it.route == currentRoute } ?: Screen.Home
-                val scaffoldConfig = screen.scaffoldConfig
+                val showBottomBar = currentRoute in listOf("home", "itinerary","community","chatbot","account")
 
                 Scaffold(
-                    topBar = scaffoldConfig.topBar,
-                    modifier = Modifier.fillMaxSize(),
-                    containerColor = scaffoldConfig.backgroundColor,
+                    topBar = {
+                        when(currentRoute) {
+                            "home" -> HomeTopBar(navController = navController)
+                            "itinerary" -> ItineraryTopBar(navController = navController)
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize().navigationBarsPadding(),
                     bottomBar = {
-                        if(screen.showBottomBar) {
+                        if(showBottomBar) {
                             BottomBar(navController)
                         }
                     }

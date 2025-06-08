@@ -24,10 +24,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -92,6 +98,45 @@ val religiousSites = listOf<ReligiousSite>(
     ReligiousSite(id = 4, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim",image = R.drawable.mosque1,time = "07:00-19.30"),
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeTopBar(
+    navController: NavController
+) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Primary)
+            .padding(bottom = 12.dp, start = Dimensions.OuterPadding, end = Dimensions.OuterPadding)
+    ) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = "Hi, Cristie",
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                    fontWeight = FontWeight.Bold,
+                    color = OnPrimary
+                )
+            },
+            actions = {
+                IconButton(onClick = {  }) {
+                    Icon(Icons.Default.ArrowDropDown, contentDescription = "Lang")
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Primary
+            ),
+        )
+        SearchTextField(
+            value = "",
+            onValueChange = {},
+            placeholder = "Where to go?",
+            onClick = {navController.navigate(Screen.HomeSearch.route)}
+        )
+    }
+}
+
 
 @Composable
 fun HomeScreen(
@@ -99,25 +144,17 @@ fun HomeScreen(
     innerPadding: PaddingValues
 ) {
     var searchQuery by remember { mutableStateOf("") }
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    PaddingValues(top = innerPadding.calculateTopPadding())
+                    PaddingValues(top = innerPadding.calculateTopPadding(), bottom = innerPadding.calculateBottomPadding())
                 )
                 .background(color = BackgroundColor)
         )
         {
-            item{
-                TopHeader(
-                    searchQuery = searchQuery,
-                    onSearchQuery = {searchQuery = it},
-                    navController = navController
-                )
-            }
-            item{
-                Spacer(modifier = Modifier.height(8.dp))
+            item {
+                Spacer(Modifier.height(Dimensions.TopBottomPadding))
             }
             item{
                 FilterSection(title = "Discover Category", list = categories)
@@ -146,8 +183,8 @@ fun HomeScreen(
             item{
                 RecommendedSection()
             }
-            item{
-                Spacer(modifier = Modifier.height(40.dp))
+            item {
+                Spacer(Modifier.height(Dimensions.TopBottomPadding))
             }
         }
 
