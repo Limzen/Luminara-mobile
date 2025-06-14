@@ -17,8 +17,10 @@ import com.example.luminara.ui.screens.home.GuideScreen
 import com.example.luminara.ui.screens.home.HomeScreen
 import com.example.luminara.ui.screens.home.SiteDetailScreen
 import com.example.luminara.ui.screens.homesearch.SearchScreen
+import com.example.luminara.ui.screens.itinerary.AddItinerary
 import com.example.luminara.ui.screens.itinerary.CreateItinerary
 import com.example.luminara.ui.screens.itinerary.DetailItinerary
+import com.example.luminara.ui.screens.itinerary.EditItinerary
 import com.example.luminara.ui.screens.itinerary.FormItinerary
 import com.example.luminara.ui.screens.login.LoginScreen
 import com.example.luminara.ui.screens.profile.MyProfileScreen
@@ -59,11 +61,14 @@ fun NavGraphSetup(
         composable(Screen.Itinerary.route) {
             CreateItinerary(navController = navController,innerPadding = innerPadding)
         }
-        composable(Screen.FormItinerary.route) {
-            FormItinerary(navController = navController)
-        }
         composable(Screen.DetailItinerary.route) {
             DetailItinerary(navController = navController)
+        }
+        composable(Screen.AddItinerary.route) {
+            AddItinerary(navController = navController)
+        }
+        composable(Screen.EditItinerary.route) {
+            EditItinerary(navController = navController)
         }
 
         composable(Screen.Community.route) {

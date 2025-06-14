@@ -63,7 +63,7 @@ import com.example.luminara.ui.components.SearchResult
 import com.example.luminara.ui.theme.BackbuttonArrow
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.CreamyBrown
-import com.example.luminara.ui.theme.DetailIti
+import com.example.luminara.ui.theme.DarkBrown
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
 
@@ -209,16 +209,16 @@ private fun FilterChip(text: String) {
         leadingIcon = {
             Icon(Icons.Default.ArrowDropDown,
                 contentDescription = "Dropdown",
-                tint = DetailIti) },
+                tint = DarkBrown) },
         colors = AssistChipDefaults.assistChipColors(
             containerColor = Color.Transparent,
-            labelColor = DetailIti,
+            labelColor = DarkBrown,
             disabledContainerColor = Color.Transparent,
-            disabledLabelColor = DetailIti.copy(alpha = 0.3f)
+            disabledLabelColor = DarkBrown.copy(alpha = 0.3f)
         ),
         border = AssistChipDefaults.assistChipBorder(
             enabled = true,
-            borderColor = DetailIti,
+            borderColor = DarkBrown,
             borderWidth = 1.dp
         ))
 }
