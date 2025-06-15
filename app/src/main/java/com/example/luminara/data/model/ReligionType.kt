@@ -1,4 +1,4 @@
-package com.example.luminara.domain.model
+package com.example.luminara.data.model
 
 data class ReligionType(
     val name: String,

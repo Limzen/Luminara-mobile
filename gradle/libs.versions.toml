@@ -1,7 +1,9 @@
 [versions]
 agp = "8.10.0"
+coilCompose = "2.6.0"
 core = "2.1.1"
 desugar_jdk_libs = "2.0.3"
+firebaseBom = "33.15.0"
 hiltAndroid = "2.56.1"
 hiltCompiler = "1.2.0"
 kotlin = "2.0.21"
@@ -26,7 +28,11 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 desugar_jdk_libs = { module = "com.google.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

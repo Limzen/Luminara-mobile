@@ -4,9 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,9 +15,11 @@ import com.example.luminara.ui.screens.home.GuideScreen
 import com.example.luminara.ui.screens.home.HomeScreen
 import com.example.luminara.ui.screens.home.SiteDetailScreen
 import com.example.luminara.ui.screens.homesearch.SearchScreen
-import com.example.luminara.ui.screens.itinerary.CreateItinerary
+import com.example.luminara.ui.screens.itinerary.AddItinerary
+import com.example.luminara.ui.screens.trip.AddTrip
 import com.example.luminara.ui.screens.itinerary.DetailItinerary
-import com.example.luminara.ui.screens.itinerary.FormItinerary
+import com.example.luminara.ui.screens.itinerary.EditItinerary
+import com.example.luminara.ui.screens.trip.TripScreen
 import com.example.luminara.ui.screens.login.LoginScreen
 import com.example.luminara.ui.screens.profile.MyProfileScreen
 import com.example.luminara.ui.screens.profile.ProfileScreen
@@ -56,14 +56,20 @@ fun NavGraphSetup(
         }
 
 
-        composable(Screen.Itinerary.route) {
-            CreateItinerary(navController = navController,innerPadding = innerPadding)
-        }
-        composable(Screen.FormItinerary.route) {
-            FormItinerary(navController = navController)
+        composable(Screen.Trip.route) {
+            TripScreen(navController = navController,innerPadding = innerPadding)
         }
         composable(Screen.DetailItinerary.route) {
             DetailItinerary(navController = navController)
+        }
+        composable(Screen.AddItinerary.route) {
+            AddItinerary(navController = navController)
+        }
+        composable(Screen.EditItinerary.route) {
+            EditItinerary(navController = navController)
+        }
+        composable(Screen.AddTrip.route) {
+            AddTrip(navController = navController)
         }
 
         composable(Screen.Community.route) {
