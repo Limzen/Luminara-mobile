@@ -11,28 +11,22 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,15 +45,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.luminara.R
-import com.example.luminara.domain.model.ReligionType
-import com.example.luminara.domain.model.ReligiousSite
-import com.example.luminara.navigation.NavItem
+import com.example.luminara.data.model.ReligionType
+import com.example.luminara.data.model.Location
 import com.example.luminara.navigation.Screen
-import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.components.HomeFilterChip
 import com.example.luminara.ui.components.HorizontalSitesCard
 import com.example.luminara.ui.components.ReligionTypeChip
@@ -91,11 +80,34 @@ val religionTypes = listOf<ReligionType>(
     ReligionType("Shrine", R.drawable.shrine_chip)
 )
 
-val religiousSites = listOf<ReligiousSite>(
-    ReligiousSite(id = 1, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim", image = R.drawable.mosque1, time = "07:00-19.30"),
-    ReligiousSite(id = 2, name = "Masjid Al Osmani", district = "Medan Labuhan District", rating = 4f, religion = "Muslim",image = R.drawable.mosque1,time = "07:00-19.30"),
-    ReligiousSite(id = 3, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim",image = R.drawable.mosque1,time = "07:00-19.30"),
-    ReligiousSite(id = 4, name = "Medan Grand Mosque", district = "Medan Kota District", rating = 4.5f, religion = "Muslim",image = R.drawable.mosque1,time = "07:00-19.30"),
+val locations = listOf<Location>(
+    Location(
+        id = "12",
+        name = "hello",
+        district = "hello",
+        rating = 4.5f,
+        religion = "hello",
+        image = "hello",
+        time = "hello"
+    ),
+    Location(
+        id = "12",
+        name = "hello",
+        district = "hello",
+        rating = 4.5f,
+        religion = "hello",
+        image = "hello",
+        time = "hello"
+    ),
+    Location(
+        id = "12",
+        name = "hello",
+        district = "hello",
+        rating = 4.5f,
+        religion = "hello",
+        image = "hello",
+        time = "hello"
+    ),
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -341,7 +353,7 @@ private fun PopularSection(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            religiousSites.forEach { site ->
+            locations.forEach { site ->
                 item {
                     VerticalSitesCard(navController = navController)
                 }
@@ -362,7 +374,7 @@ private fun RecommendedSection() {
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            religiousSites.forEach { site ->
+            locations.forEach { site ->
                 HorizontalSitesCard()
             }
         }

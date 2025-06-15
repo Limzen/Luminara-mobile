@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.luminara.R
-import com.example.luminara.domain.model.ReligiousSite
+import com.example.luminara.data.model.Location
 import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.components.SearchResult
 import com.example.luminara.ui.components.SearchTextField
@@ -37,87 +37,33 @@ fun SearchScreen(
     navController: NavController,
     innerPadding: PaddingValues
 ) {
-    val religiousSites = listOf<ReligiousSite>(
-        ReligiousSite(
-            id = 1,
-            name = "Medan Grand Mosque",
-            district = "Medan Kota District",
+    val locations = listOf<Location>(
+        Location(
+            id = "12",
+            name = "hello",
+            district = "hello",
             rating = 4.5f,
-            religion = "Muslim",
-            image = R.drawable.mosque1,
-            time = "07:00-19.30"
+            religion = "hello",
+            image = "hello",
+            time = "hello"
         ),
-        ReligiousSite(
-            id = 2,
-            name = "Masjid Al Osmani",
-            district = "Medan Labuhan District",
-            rating = 4f,
-            religion = "Muslim",
-            image = R.drawable.mosque1,
-            time = "07:00-19.30"
-        ),
-        ReligiousSite(
-            id = 3,
-            name = "Medan Grand Mosque",
-            district = "Medan Kota District",
+        Location(
+            id = "12",
+            name = "hello",
+            district = "hello",
             rating = 4.5f,
-            religion = "Muslim",
-            image = R.drawable.mosque1,
-            time = "07:00-19.30"
+            religion = "hello",
+            image = "hello",
+            time = "hello"
         ),
-        ReligiousSite(
-            id = 4,
-            name = "Medan Grand Mosque",
-            district = "Medan Kota District",
+        Location(
+            id = "12",
+            name = "hello",
+            district = "hello",
             rating = 4.5f,
-            religion = "Muslim",
-            image = R.drawable.mosque1,
-            time = "07:00-19.30"
-        ),
-        ReligiousSite(
-            id = 4,
-            name = "Medan Grand Mosque",
-            district = "Medan Kota District",
-            rating = 4.5f,
-            religion = "Muslim",
-            image = R.drawable.mosque1,
-            time = "07:00-19.30"
-        ),
-        ReligiousSite(
-            id = 4,
-            name = "Medan Grand Mosque",
-            district = "Medan Kota District",
-            rating = 4.5f,
-            religion = "Muslim",
-            image = R.drawable.mosque1,
-            time = "07:00-19.30"
-        ),
-        ReligiousSite(
-            id = 4,
-            name = "Medan Grand Mosque",
-            district = "Medan Kota District",
-            rating = 4.5f,
-            religion = "Muslim",
-            image = R.drawable.mosque1,
-            time = "07:00-19.30"
-        ),
-        ReligiousSite(
-            id = 4,
-            name = "Medan Grand Mosque",
-            district = "Medan Kota District",
-            rating = 4.5f,
-            religion = "Muslim",
-            image = R.drawable.mosque1,
-            time = "07:00-19.30"
-        ),
-        ReligiousSite(
-            id = 4,
-            name = "Medan Grand Mosque",
-            district = "Medan Kota District",
-            rating = 4.5f,
-            religion = "Muslim",
-            image = R.drawable.mosque1,
-            time = "07:00-19.30"
+            religion = "hello",
+            image = "hello",
+            time = "hello"
         ),
     )
 
@@ -166,7 +112,7 @@ fun SearchScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(Dimensions.OuterPadding)
             ) {
-                items(items = religiousSites) { site ->
+                items(items = locations) { site ->
                     SearchResult(site = site)
                 }
             }

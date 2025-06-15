@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.luminara.ui.components.BottomButton
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
@@ -57,7 +58,7 @@ fun AddItinerary(
             TopAppBar(
                 modifier = Modifier
                     .shadow(
-                        elevation = 4.dp
+                        elevation = Dimensions.TopBarElevation
                     ),
                 title = {
                     Text(
@@ -77,7 +78,7 @@ fun AddItinerary(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.largeTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = BackgroundColor
                 ),
             )
@@ -90,19 +91,10 @@ fun AddItinerary(
                 onBudgetChange = { budget = it }
             )
         }
-        Button(
-            onClick = { /* handle save */ },
-            modifier = Modifier
-                .align(Alignment.BottomCenter) // ✅ Only valid inside BoxScope
-                .fillMaxWidth()
-                .padding(horizontal = Dimensions.OuterPadding, vertical = 24.dp)
-                .navigationBarsPadding(), // prevent overlap with system nav bar
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Primary
-            )
-        ) {
-            Text("Add Itinerary", color = Color.White)
-        }
+        BottomButton(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            text = "Add Itinerary",
+            onClick = {}
+        )
     }
 }

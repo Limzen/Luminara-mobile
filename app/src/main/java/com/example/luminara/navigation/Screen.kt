@@ -18,10 +18,11 @@ sealed class Screen(val route: String) {
     data object Guide: Screen("guide")
 
 
-    data object Itinerary: Screen("itinerary")
+    data object Trip: Screen("trip")
     data object DetailItinerary: Screen("detail_itinerary")
     data object AddItinerary: Screen("add_itinerary")
     data object EditItinerary: Screen("edit_itinerary")
+    data object AddTrip: Screen("add_trip")
 
 
     data object Community: Screen("community")
@@ -38,9 +39,9 @@ sealed class Screen(val route: String) {
 }
 
 val allScreens = listOf(
-    Home, Screen.Itinerary, Screen.Community,
+    Home, Screen.Trip, Screen.Community,
     Screen.Chatbot, Screen.Account, Screen.HomeSearch, Screen.SiteDetail, Screen.Guide,
-    Screen.EditItinerary, Screen.DetailItinerary, Screen.AddItinerary,
+    Screen.EditItinerary, Screen.DetailItinerary, Screen.AddItinerary, Screen.AddTrip,
     Screen.MyProfile, Screen.PasswordManager,
     Screen.CommunityDetail,
     Screen.Login, Screen.SignUp

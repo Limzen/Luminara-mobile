@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id ("com.google.devtools.ksp")
     id ("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -76,4 +77,13 @@ dependencies {
     implementation( libs.androidx.navigation.compose)
 
     implementation(libs.kotlinx.serialization.json)
+
+    //firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.analytics)
+
+    //coil
+    implementation(libs.coil.compose)
+
 }

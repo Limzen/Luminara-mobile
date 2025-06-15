@@ -1,13 +1,10 @@
 package com.example.luminara.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -32,14 +28,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.luminara.domain.model.ReligiousSite
-import com.example.luminara.ui.theme.MiniHeading
+import com.example.luminara.R
+import com.example.luminara.data.model.Location
 import com.example.luminara.ui.theme.Primary
 
 
 @Composable
 fun SearchResult(
-    site: ReligiousSite
+    site: Location
 ) {
     Card(
         modifier = Modifier
@@ -62,7 +58,7 @@ fun SearchResult(
                 modifier = Modifier
                     .size(90.dp)
                     .clip(RoundedCornerShape(10.dp)),
-                painter = painterResource(id = site.image),
+                painter = painterResource(id = R.drawable.mosque1),
                 contentDescription = "Site Image",
                 contentScale = ContentScale.Crop
             )

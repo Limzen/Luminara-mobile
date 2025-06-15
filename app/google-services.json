@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "489695041319",
+    "project_id": "luminaraapp",
+    "storage_bucket": "luminaraapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489695041319:android:5a4a8d834e94ede12dfb02",
+        "android_client_info": {
+          "package_name": "com.example.luminara"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXrwhKfSDnJRS77KyKamVhQqNGOVlUiis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -43,7 +43,7 @@ fun BottomBar(navController: NavController) {
 
     val bottomNavItems = listOf(
         NavItem("Home", R.drawable.home_icon, Screen.Home),
-        NavItem("Itinerary", R.drawable.itinerary_icon, Screen.Itinerary),
+        NavItem("Trip", R.drawable.itinerary_icon, Screen.Trip),
         NavItem("Community", R.drawable.community_icon, Screen.Community,),
         NavItem("ChatBot", R.drawable.chatbot_icon, Screen.Chatbot),
         NavItem("Account", R.drawable.profile_icon, Screen.Account)

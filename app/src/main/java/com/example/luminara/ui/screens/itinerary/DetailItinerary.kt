@@ -1,6 +1,7 @@
 package com.example.luminara.ui.screens.itinerary
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
@@ -79,6 +80,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.luminara.R
 import com.example.luminara.navigation.Screen
@@ -123,6 +125,7 @@ fun DetailItinerary(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
+
         LazyColumn(
             state = scrollState
         ) {
@@ -245,12 +248,14 @@ fun DetailItinerary(
         }
         if (!showTitle.value) {
             IconButton(
-                onClick = { navController.popBackStack() },
+                onClick = {
+                    navController.popBackStack() },
                 modifier = Modifier
                     .padding(top = 40.dp, start = Dimensions.OuterPadding) // adjust for status bar
                     .size(40.dp)
-                    .background(color = Color.White.copy(alpha = 0.9f), shape = CircleShape)
+                    .zIndex(10f)
                     .align(Alignment.TopStart)
+                    .background(color = Color.White.copy(alpha = 0.9f), shape = CircleShape)
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -271,7 +276,7 @@ fun DetailItinerary(
         LargeTopAppBar(
             modifier = Modifier
                 .shadow(
-                    elevation = if (showTitle.value) 4.dp else 0.dp
+                    elevation = if (showTitle.value) Dimensions.TopBarElevation else 0.dp
                 ),
             title = {
                     AnimatedVisibility(visible = showTitle.value) {
@@ -287,7 +292,8 @@ fun DetailItinerary(
                     AnimatedVisibility(visible = showTitle.value) {
                         IconButton(
                             modifier = Modifier.padding(start = Dimensions.BackIconPadding),
-                            onClick = { navController.popBackStack() }
+                            onClick = {
+                                navController.popBackStack() }
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
