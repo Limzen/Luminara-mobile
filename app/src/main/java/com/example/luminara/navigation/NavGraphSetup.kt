@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.luminara.ui.screen.PasswordManagerScreen
 import com.example.luminara.ui.screens.community.CommunityDetailScreen
 import com.example.luminara.ui.screens.community.CommunityScreen
@@ -24,6 +26,7 @@ import com.example.luminara.ui.screens.login.LoginScreen
 import com.example.luminara.ui.screens.profile.MyProfileScreen
 import com.example.luminara.ui.screens.profile.ProfileScreen
 import com.example.luminara.ui.screens.signup.SignUpScreen
+import com.example.luminara.ui.screens.trip.EditTrip
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -70,6 +73,16 @@ fun NavGraphSetup(
         }
         composable(Screen.AddTrip.route) {
             AddTrip(navController = navController)
+        }
+        composable(
+            route = Screen.EditTrip.route,
+            arguments = listOf(navArgument("tripId") {type = NavType.StringType})
+        ) { backStackEntry ->
+            val tripId = backStackEntry.arguments?.getString("tripId")!!
+            EditTrip(
+                navController = navController,
+                tripId = tripId
+            )
         }
 
         composable(Screen.Community.route) {

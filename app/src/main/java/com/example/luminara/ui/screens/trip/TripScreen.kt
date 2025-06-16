@@ -1,9 +1,12 @@
 package com.example.luminara.ui.screens.trip
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,21 +15,33 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -39,7 +54,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.luminara.R
 import com.example.luminara.data.model.Itinerary
@@ -49,12 +63,19 @@ import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.luminara.data.model.BottomSheetAction
+import com.example.luminara.ui.components.BasicBottomSheet
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,14 +109,35 @@ fun TripTopBar(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TripScreen(
     navController: NavController,
     innerPadding: PaddingValues,
-    viewModel: TripViewModel = hiltViewModel()
-
+    viewModel: TripViewModel = hiltViewModel(),
 ) {
     val tripList by viewModel.trips.collectAsState()
+    var selectedTrip by remember { mutableStateOf<Trip?>(null) }
+
+    var sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
+    var showSheet by remember { mutableStateOf(false) }
+    val actions = listOf(
+        BottomSheetAction(
+            label = "Edit",
+            icon = Icons.Outlined.Edit,
+            onClick = {
+                selectedTrip?.let {
+                    navController.navigate(Screen.EditTrip.createRoute(it.id))
+                }
+            }
+        ),
+        BottomSheetAction(
+            label = "Delete",
+            icon = Icons.Outlined.Delete,
+            onClick = { /* Handle delete action */ }
+        )
+    )
 
     LazyColumn(
         modifier = Modifier
@@ -109,21 +151,37 @@ fun TripScreen(
             Spacer(Modifier.height(Dimensions.TopBottomPadding))
         }
         items(tripList) { trip ->
-           ItineraryCard(
+           TripCard(
                navController = navController,
-               trip = trip
+               trip = trip,
+               onOpenSheet = {
+                   selectedTrip = trip
+                   showSheet = true
+                   scope.launch { sheetState.show() }
+                             },
            )
         }
         item {
             Spacer(Modifier.height(Dimensions.TopBottomPadding))
         }
     }
+    if(showSheet) {
+        BasicBottomSheet(
+            closeSheet = {
+                showSheet = false
+                scope.launch { sheetState.hide() }
+            },
+            sheetState = sheetState,
+            actions = actions
+        )
+    }
 }
 
 @Composable
-private fun ItineraryCard(
+private fun TripCard(
     navController: NavController,
-    trip: Trip
+    trip: Trip,
+    onOpenSheet: () -> Unit,
 ) {
     val dateFormat = SimpleDateFormat("MMM-dd", Locale.getDefault())
     Card(
@@ -166,7 +224,7 @@ private fun ItineraryCard(
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     modifier =  Modifier.padding(horizontal = 16.dp)
                 )
-                IconButton(onClick = { /* TODO */ }) {
+                IconButton(onClick = { onOpenSheet() }) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "More options"
@@ -184,6 +242,7 @@ private fun ItineraryCard(
         }
     }
 }
+
 
 
 

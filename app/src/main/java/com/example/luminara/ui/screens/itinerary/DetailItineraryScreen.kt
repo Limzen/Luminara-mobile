@@ -1,7 +1,5 @@
 package com.example.luminara.ui.screens.itinerary
 
-import android.app.Activity
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
@@ -18,10 +16,8 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -29,24 +25,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -75,8 +63,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -89,11 +75,9 @@ import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.DarkBrown
 import com.example.luminara.ui.theme.DarkText
 import com.example.luminara.ui.theme.ErrorColor
-import com.example.luminara.ui.theme.LightBrown
 import com.example.luminara.ui.theme.LightGray
 import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Primary
-import com.example.luminara.ui.theme.SuccessColor
 import com.example.luminara.utils.Dimensions
 import com.example.luminara.utils.TransparentStatusBarActivity
 import kotlinx.coroutines.launch

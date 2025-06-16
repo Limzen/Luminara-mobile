@@ -34,6 +34,19 @@ class TripRepository @Inject constructor(
         tripCollection.add(trip)
     }
 
+    suspend fun updateTrip(tripId:String, trip: Trip) {
+        tripCollection.document(tripId).set(trip)
+    }
+
+    suspend fun getTripById(tripId: String): Trip? {
+        return try {
+            val doc = Firebase.firestore.collection("trips").document(tripId).get().await()
+            doc.toObject(Trip::class.java)?.copy(id = doc.id)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     /*suspend fun uploadImage(imageUri: Uri): String {
         val fileName = UUID.randomUUID().toString()
         val storageRef = FirebaseStorage.getInstance().reference.child("trip_images/$fileName")
