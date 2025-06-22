@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.luminara.ui.components.BottomButton
 import com.example.luminara.ui.theme.BackgroundColor
@@ -42,11 +44,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun EditTrip(
     navController: NavController,
-    tripId: String,
-    viewModel: TripViewModel = hiltViewModel()
+    tripId: Long,
 ) {
-    val tripState = remember { viewModel.getTripById(tripId) }
-    val trip by tripState.collectAsState()
+    val tripViewModel: TripViewModel = viewModel()
+    val trip by tripViewModel.selectedTrip.collectAsState()
+
+    LaunchedEffect(tripId) {
+        tripViewModel.fetchTripById(tripId)
+    }
 
     if (trip == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -130,19 +135,20 @@ fun EditTrip(
                 if (name.isBlank()) {
                     showSnackbar(message = "Please filled in name")
                 } else {
-                    viewModel.updateTrip(
-                        tripId = tripId,
-                        imageUri = null,
+                    val updatedTrip = trip!!.copy(
                         name = name,
                         description = description,
                         startDate = startDate,
-                        endDate = endDate,
+                        endDate = endDate
+                    )
+                    tripViewModel.editTrip(
+                        updatedTrip,
                         onSuccess = {
-                            showSnackbar(message = "Trip Added")
+                            showSnackbar("Trip updated")
                             navController.popBackStack()
                         },
                         onError = {
-                            showSnackbar(message = "Failed: $it")
+                            showSnackbar("Failed to update trip")
                         }
                     )
                 }
@@ -150,4 +156,5 @@ fun EditTrip(
         )
 
     }
+
 }

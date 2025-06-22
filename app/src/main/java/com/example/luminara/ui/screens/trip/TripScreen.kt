@@ -1,6 +1,8 @@
 package com.example.luminara.ui.screens.trip
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,6 +45,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,14 +71,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.luminara.data.model.BottomSheetAction
 import com.example.luminara.ui.components.BasicBottomSheet
+import com.example.luminara.ui.screens.home.DirectoryViewModel
+import com.example.luminara.utils.DateUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,14 +118,20 @@ fun TripTopBar(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TripScreen(
     navController: NavController,
     innerPadding: PaddingValues,
-    viewModel: TripViewModel = hiltViewModel(),
 ) {
-    val tripList by viewModel.trips.collectAsState()
+    val tripViewModel: TripViewModel = viewModel()
+    val tripList by tripViewModel.trips.collectAsState()
+
+    LaunchedEffect(Unit) {
+        tripViewModel.fetchTrips()
+    }
+
     var selectedTrip by remember { mutableStateOf<Trip?>(null) }
 
     var sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -150,7 +165,7 @@ fun TripScreen(
         item {
             Spacer(Modifier.height(Dimensions.TopBottomPadding))
         }
-        items(tripList) { trip ->
+       items(tripList) { trip ->
            TripCard(
                navController = navController,
                trip = trip,
@@ -161,6 +176,7 @@ fun TripScreen(
                              },
            )
         }
+
         item {
             Spacer(Modifier.height(Dimensions.TopBottomPadding))
         }
@@ -177,13 +193,15 @@ fun TripScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun TripCard(
     navController: NavController,
     trip: Trip,
     onOpenSheet: () -> Unit,
 ) {
-    val dateFormat = SimpleDateFormat("MMM-dd", Locale.getDefault())
+    val formatter = DateTimeFormatter.ofPattern("MMM dd")
+
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -232,7 +250,7 @@ private fun TripCard(
                 }
             }
             Text(
-                text = "${dateFormat.format(trip.startDate.toDate())} - ${dateFormat.format(trip.endDate.toDate())} . ${trip.description}",
+                text = "${DateUtils.formatDate(trip.startDate)} - ${DateUtils.formatDate(trip.endDate)} . ${trip.description}",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 modifier = Modifier.padding(horizontal = 16.dp)

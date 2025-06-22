@@ -33,20 +33,40 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.luminara.data.model.Trip
 import com.example.luminara.ui.components.BottomButton
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.utils.Dimensions
 import com.example.luminara.utils.TransparentStatusBarActivity
 import com.google.firebase.Timestamp
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTrip(
     navController: NavController,
-    viewModel: TripViewModel = hiltViewModel()
 ) {
+    val tripViewModel: TripViewModel = viewModel()
+
+    var name by rememberSaveable { mutableStateOf("") }
+    var description by rememberSaveable { mutableStateOf("") }
+    val currentDate = remember {
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        sdf.format(Date())
+    }
+    var startDate by rememberSaveable { mutableStateOf(currentDate) }
+    var endDate by rememberSaveable { mutableStateOf(currentDate) }
+    var imageUri by rememberSaveable { mutableStateOf("") }
+
+
+
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
@@ -55,21 +75,6 @@ fun AddTrip(
             snackbarHostState.showSnackbar(message)
         }
     }
-
-    var name by rememberSaveable { mutableStateOf("") }
-    var description by rememberSaveable { mutableStateOf("") }
-    val currentDate = Timestamp.now()
-    var startDate by rememberSaveable { mutableStateOf(currentDate) }
-    var endDate by rememberSaveable { mutableStateOf(currentDate) }
-    var imageUri by rememberSaveable { mutableStateOf("") }
-
-
-    val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-        imageUri = it.toString()
-    }
-    val uploading by viewModel.uploading.collectAsState()
-
 
     TransparentStatusBarActivity()
 
@@ -131,18 +136,20 @@ fun AddTrip(
                 if (name.isBlank()) {
                     showSnackbar(message = "Please filled in name")
                 } else {
-                    viewModel.addTrip(
-                        imageUri = null,
+                    tripViewModel.addTrip(
+                        Trip(
                         name = name,
                         description = description,
-                        startDate = startDate,
-                        endDate = endDate,
+                        startDate = startDate.toString(),
+                        endDate = endDate.toString(),
+                        image = "https://images.pexels.com/photos/2079666/pexels-photo-2079666.jpeg"
+                    ),
                         onSuccess = {
-                            showSnackbar(message = "Trip Added")
+                            showSnackbar(message = "Trip added")
                             navController.popBackStack()
                         },
-                        onError = {
-                            showSnackbar(message = "Failed: $it")
+                        onError =  {
+                            showSnackbar("Failed to add")
                         }
                     )
                 }

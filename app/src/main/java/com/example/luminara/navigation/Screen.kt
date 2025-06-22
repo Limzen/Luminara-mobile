@@ -24,7 +24,7 @@ sealed class Screen(val route: String) {
     data object EditItinerary: Screen("edit_itinerary")
     data object AddTrip: Screen("add_trip")
     data object EditTrip: Screen("edit_trip/{tripId}") {
-        fun createRoute(tripId: String) = "edit_Trip/$tripId"
+        fun createRoute(tripId: Long) = "edit_Trip/$tripId"
     }
 
 

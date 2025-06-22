@@ -37,10 +37,10 @@ fun FormTrip(
     onNameChange: (String) -> Unit,
     description:String,
     onDescriptionChange:(String) -> Unit,
-    startDate: Timestamp,
-    onStartDateChange:(Timestamp) -> Unit,
-    endDate:Timestamp,
-    onEndDateChange:(Timestamp) -> Unit,
+    startDate: String,
+    onStartDateChange:(String) -> Unit,
+    endDate:String,
+    onEndDateChange:(String) -> Unit,
     imageUri: String
 ) {
     NameSection(name = name, onNameChange = onNameChange)
@@ -143,7 +143,7 @@ private fun DescriptionSection(description: String, onDescriptionChange: (String
 }
 
 @Composable
-private fun DateSection(startDate: Timestamp, onStartDateChange: (Timestamp) -> Unit, endDate: Timestamp, onEndDateChange: (Timestamp) -> Unit) {
+private fun DateSection(startDate: String, onStartDateChange: (String) -> Unit, endDate: String, onEndDateChange: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
