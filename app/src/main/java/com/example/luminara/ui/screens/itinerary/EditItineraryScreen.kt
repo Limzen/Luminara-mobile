@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.luminara.ui.components.BottomButton
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
@@ -39,14 +38,15 @@ import com.example.luminara.utils.TransparentStatusBarActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddItinerary(
+fun EditItinerary(
     navController: NavController
 ) {
+    var date by rememberSaveable { mutableStateOf("December 12 2024") }
+    var time by rememberSaveable { mutableStateOf("16:00") }
+    var budget by rememberSaveable { mutableStateOf("30000") }
+
     TransparentStatusBarActivity()
 
-    var date by rememberSaveable { mutableStateOf("") }
-    var time by rememberSaveable { mutableStateOf("") }
-    var budget by rememberSaveable { mutableStateOf("") }
 
     Box() {
         Column(
@@ -58,11 +58,11 @@ fun AddItinerary(
             TopAppBar(
                 modifier = Modifier
                     .shadow(
-                        elevation = Dimensions.TopBarElevation
+                        elevation = 4.dp
                     ),
                 title = {
                     Text(
-                        text = "Add Itinerary",
+                        text = "Edit Itinerary",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -78,7 +78,7 @@ fun AddItinerary(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
+                colors = TopAppBarDefaults.largeTopAppBarColors(
                     containerColor = BackgroundColor
                 ),
             )
@@ -91,10 +91,19 @@ fun AddItinerary(
                 onBudgetChange = { budget = it }
             )
         }
-        BottomButton(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            text = "Add Itinerary",
-            onClick = {}
-        )
+        Button(
+            onClick = { /* handle save */ },
+            modifier = Modifier
+                .align(Alignment.BottomCenter) // ✅ Only valid inside BoxScope
+                .fillMaxWidth()
+                .padding(horizontal = Dimensions.OuterPadding, vertical = 24.dp)
+                .navigationBarsPadding(), // prevent overlap with system nav bar
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Primary
+            )
+        ) {
+            Text("Save Itinerary", color = Color.White)
+        }
     }
 }

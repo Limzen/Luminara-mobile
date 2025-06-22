@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.luminara.ui.theme.DarkBrown
 import com.example.luminara.ui.components.DatePickerField
 import com.example.luminara.utils.Dimensions
+import com.google.firebase.Timestamp
 
 @Composable
 fun FormTrip(
@@ -36,10 +37,10 @@ fun FormTrip(
     onNameChange: (String) -> Unit,
     description:String,
     onDescriptionChange:(String) -> Unit,
-    startDate: Long,
-    onStartDateChange:(Long) -> Unit,
-    endDate:Long,
-    onEndDateChange:(Long) -> Unit,
+    startDate: Timestamp,
+    onStartDateChange:(Timestamp) -> Unit,
+    endDate:Timestamp,
+    onEndDateChange:(Timestamp) -> Unit,
     imageUri: String
 ) {
     NameSection(name = name, onNameChange = onNameChange)
@@ -142,7 +143,7 @@ private fun DescriptionSection(description: String, onDescriptionChange: (String
 }
 
 @Composable
-private fun DateSection(startDate: Long, onStartDateChange: (Long) -> Unit, endDate: Long, onEndDateChange: (Long) -> Unit) {
+private fun DateSection(startDate: Timestamp, onStartDateChange: (Timestamp) -> Unit, endDate: Timestamp, onEndDateChange: (Timestamp) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

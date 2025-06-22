@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -24,19 +25,24 @@ import java.util.Locale
 @Composable
 fun DatePickerField(
     label: String,
-    date: Long?, // store date as timestamp milliseconds or null
-    onDateChange: (Long) -> Unit
+    date: Timestamp?, // store date as timestamp milliseconds or null
+    onDateChange: (Timestamp) -> Unit
 ) {
     val context = LocalContext.current
     val formattedDate = remember(date) {
-        if (date != null) {
-            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(date))
-        } else {
-            ""
-        }
+        date?.toDate()?.let {
+            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
+        } ?: ""
     }
 
     var showDialog by remember { mutableStateOf(false) }
+
+    val initialCalendar = remember {
+        Calendar.getInstance().apply {
+            date?.toDate()?.let { time = it }
+        }
+    }
+
 
     OutlinedTextField(
         value = formattedDate,
@@ -52,20 +58,23 @@ fun DatePickerField(
     )
 
     if (showDialog) {
-        // Initialize calendar with current date or today
-        val calendar = Calendar.getInstance().apply {
-            if (date != null) timeInMillis = date
-        }
         DatePickerDialog(
             context,
             { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-                calendar.set(year, month, dayOfMonth)
-                onDateChange(calendar.timeInMillis)
+                val newCalendar = Calendar.getInstance().apply {
+                    set(year, month, dayOfMonth, 0, 0, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                onDateChange(Timestamp(newCalendar.time))
                 showDialog = false
             },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+            initialCalendar.get(Calendar.YEAR),
+            initialCalendar.get(Calendar.MONTH),
+            initialCalendar.get(Calendar.DAY_OF_MONTH)
+        ).apply {
+            // Optional: Set date constraints
+            // datePicker.minDate = ...
+            // datePicker.maxDate = ...
+        }.show()
     }
 }

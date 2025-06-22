@@ -1,6 +1,7 @@
 package com.example.luminara.ui.screens.trip
 
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.luminara.data.model.Trip
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TripViewModel @Inject constructor (
-    private val tripRepository: TripRepository
+    private val tripRepository: TripRepository,
+    savedStateHandle: SavedStateHandle
 ): ViewModel() {
     val trips: StateFlow<List<Trip>> = tripRepository.getTrips()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -28,8 +30,8 @@ class TripViewModel @Inject constructor (
         imageUri: Uri?,
         name: String,
         description: String,
-        startDate: Long,
-        endDate: Long,
+        startDate: Timestamp,
+        endDate: Timestamp,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) = viewModelScope.launch {
@@ -40,8 +42,8 @@ class TripViewModel @Inject constructor (
                 id = "",
                 name = name,
                 description = description,
-                startDate = Timestamp(startDate / 1000, ((startDate % 1000) * 1000000).toInt()),
-                endDate = Timestamp(endDate / 1000, ((endDate % 1000) * 1000000).toInt()),
+                startDate = startDate,
+                endDate = endDate,
                 image = "https://images.pexels.com/photos/338416/pexels-photo-338416.jpeg"
             )
             tripRepository.addTrip(trip)
@@ -51,5 +53,50 @@ class TripViewModel @Inject constructor (
         } finally {
             _uploading.value = false
         }
+    }
+
+    fun updateTrip(
+        tripId: String,
+        imageUri: Uri?,
+        name: String,
+        description: String,
+        startDate: Timestamp,
+        endDate: Timestamp,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) = viewModelScope.launch {
+        try {
+          /*  _uploading.value = true
+
+            val updatedImageUrl = if (imageUri != null) {
+                tripRepository.uploadImage(imageUri)
+            } else {
+                originalTrip.image
+            }
+            */
+            val updatedTrip = Trip(
+                id = tripId,
+                name = name,
+                description = description,
+                startDate = startDate,
+                endDate = endDate,
+               // image = updatedImageUrl
+            )
+
+            tripRepository.updateTrip(tripId, updatedTrip)
+            onSuccess()
+        } catch (e: Exception) {
+            onError(e.message ?: "Error")
+        } finally {
+            _uploading.value = false
+        }
+    }
+
+    fun getTripById(tripId: String): StateFlow<Trip?> {
+        val tripState = MutableStateFlow<Trip?>(null)
+        viewModelScope.launch {
+            tripState.value = tripRepository.getTripById(tripId)
+        }
+        return tripState
     }
 }
