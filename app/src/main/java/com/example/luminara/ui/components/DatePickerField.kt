@@ -21,28 +21,51 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 @Composable
 fun DatePickerField(
     label: String,
-    date: Timestamp?, // store date as timestamp milliseconds or null
-    onDateChange: (Timestamp) -> Unit
+    date: String, // store date as timestamp milliseconds or null
+    onDateChange: (String) -> Unit
 ) {
     val context = LocalContext.current
-    val formattedDate = remember(date) {
-        date?.toDate()?.let {
-            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
-        } ?: ""
-    }
+    val displayFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+    isoFormat.timeZone = TimeZone.getTimeZone("UTC")
 
     var showDialog by remember { mutableStateOf(false) }
 
-    val initialCalendar = remember {
+    val initialCalendar = remember(date) {
         Calendar.getInstance().apply {
-            date?.toDate()?.let { time = it }
+            if (date.isNotEmpty()) {
+                try {
+                    val parsed = isoFormat.parse(date)
+                        ?: displayFormat.parse(date)
+                    if (parsed != null) {
+                        time = parsed
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+    fun parseDateForDisplay(dateString: String): String {
+        return try {
+            if (dateString.isBlank()) return ""
+            val isoFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            isoFormat.timeZone = TimeZone.getTimeZone("UTC")
+            val displayFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val parsedDate = isoFormat.parse(dateString)
+                ?: displayFormat.parse(dateString)
+            parsedDate?.let { displayFormat.format(it) } ?: ""
+        } catch (e: Exception) {
+            ""
         }
     }
 
+    val formattedDate = parseDateForDisplay(date)
 
     OutlinedTextField(
         value = formattedDate,
@@ -61,11 +84,12 @@ fun DatePickerField(
         DatePickerDialog(
             context,
             { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-                val newCalendar = Calendar.getInstance().apply {
+                val newCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
                     set(year, month, dayOfMonth, 0, 0, 0)
                     set(Calendar.MILLISECOND, 0)
                 }
-                onDateChange(Timestamp(newCalendar.time))
+                val isoDateString = isoFormat.format(newCalendar.time)
+                onDateChange(isoDateString)
                 showDialog = false
             },
             initialCalendar.get(Calendar.YEAR),

@@ -15,6 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.luminara.navigation.NavGraphSetup
 import com.example.luminara.ui.components.BottomBar
+import com.example.luminara.ui.screens.community.CommunityTopBar
 import com.example.luminara.ui.screens.home.HomeTopBar
 import com.example.luminara.ui.screens.trip.TripTopBar
 import com.example.luminara.ui.theme.LuminaraTheme
@@ -40,6 +41,7 @@ class MainActivity : ComponentActivity() {
                         when(currentRoute) {
                             "home" -> HomeTopBar(navController = navController)
                             "trip" -> TripTopBar(navController = navController)
+                            "community" -> CommunityTopBar(navController = navController)
                         }
                     },
                     modifier = Modifier.fillMaxSize().navigationBarsPadding(),

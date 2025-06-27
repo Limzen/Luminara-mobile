@@ -76,17 +76,17 @@ fun NavGraphSetup(
         }
         composable(
             route = Screen.EditTrip.route,
-            arguments = listOf(navArgument("tripId") {type = NavType.StringType})
+            arguments = listOf(navArgument("tripId") {type = NavType.LongType})
         ) { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getString("tripId")!!
-            EditTrip(
+            val tripId = backStackEntry.arguments?.getLong("tripId") ?: 0L
+           EditTrip(
                 navController = navController,
                 tripId = tripId
             )
         }
 
         composable(Screen.Community.route) {
-            CommunityScreen(navController = navController)
+            CommunityScreen(navController = navController,innerPadding = innerPadding)
         }
         composable(Screen.CommunityDetail.route) {
             CommunityDetailScreen(navController = navController)

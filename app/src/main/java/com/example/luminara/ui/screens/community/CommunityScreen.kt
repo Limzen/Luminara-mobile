@@ -1,9 +1,11 @@
 package com.example.luminara.ui.screens.community
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,17 +14,23 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
@@ -30,170 +38,267 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.luminara.R
 import com.example.luminara.data.model.Community
 import com.example.luminara.navigation.Screen
+import com.example.luminara.ui.screens.trip.TripViewModel
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.CreamyBrown
 import com.example.luminara.ui.theme.DarkBrown
+import com.example.luminara.ui.theme.DarkText
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommunityScreen(
-    navController: NavController
+    navController: NavController,
+    innerPadding: PaddingValues
 ) {
-    val filterItems = listOf("Agama", "Kegiatan", "Lokasi")
-    val communityList = listOf(
-        Community("Al-Mashun Community", R.drawable.mosque1),
-        Community("Velangkanni Faith Walkers", R.drawable.mosque1),
-        Community("Spirit of Gunung Timur", R.drawable.mosque1),
-        Community("Maitreya Devotees Circle", R.drawable.mosque1),
-        Community("Al-Mashun Community", R.drawable.mosque1),
-        Community("Velangkanni Faith Walkers", R.drawable.mosque1),
-        Community("Spirit of Gunung Timur", R.drawable.mosque1),
-        Community("Maitreya Devotees Circle", R.drawable.mosque1)
-    )
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "Community",
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        color = Color.White
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Primary,
-                    navigationIconContentColor = Color.White,
-                    titleContentColor = Color.White
+    val communityViewModel: CommunityViewModel = viewModel()
+    val communityList by communityViewModel.communities.collectAsState()
+
+    LaunchedEffect(Unit) {
+        communityViewModel.getCommunities()
+    }
+
+    var showSheet by remember { mutableStateOf(false)}
+    var sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
+    var selectedStatus by remember { mutableStateOf("All") }
+    val filterItems = listOf(selectedStatus)
+
+
+    val tabTitles = listOf("All", "Personal")
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                PaddingValues(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding()
                 )
             )
-        },
+            .padding(bottom = 12.dp)
+            .background(color = BackgroundColor)
+    ) {
+        Spacer(Modifier.height(8.dp))
 
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Primary)
-                .padding(innerPadding)
+        ScrollableTabRow(
+            selectedTabIndex = selectedTabIndex,
+            edgePadding = 0.dp, // no padding on sides
+            indicator = { tabPositions ->
+                val currentTabPosition = tabPositions[selectedTabIndex]
+                val indicatorOffset = animateDpAsState(currentTabPosition.left).value
+
+                Box(
+                    Modifier
+                        .wrapContentSize(Alignment.BottomStart)
+                        .offset(x = indicatorOffset)
+                        .width(currentTabPosition.width)
+                        .height(2.dp)
+                        .background(Primary, shape = RoundedCornerShape(8.dp))
+                )
+            },
+            divider = {} // no divider line at bottom
         ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize(),
-                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                color = BackgroundColor
-            ) {
-                Column() {
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = Dimensions.OuterPadding, vertical = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        filterItems.forEach {
-                            FilterChip(text = it)
-                        }
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Search",
-                            modifier = Modifier.size(20.dp),
-                            tint = Color.DarkGray
+            tabTitles.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    text = {
+                        Text(
+                            text = title,
+                            color = if (selectedTabIndex == index) DarkText else Color.Gray,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                         )
                     }
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(Dimensions.OuterPadding)
-                    ) {
-                        items(communityList) {community ->
-                            CommunityCard(community, onClick = {navController.navigate(Screen.CommunityDetail.route)})
-                        }
-                    }
-                }
+                )
             }
         }
+        Spacer(modifier = Modifier.height(2.dp))
+        when (selectedTabIndex) {
+            0 -> {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(horizontal = Dimensions.OuterPadding)
+                ) {
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .padding(top = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            filterItems.forEach {
+                                FilterChip(text = it, onClick = {
+                                    showSheet = true
+                                    scope.launch { sheetState.show() }
+                                })
+                            }
+                        }
+                    }
+                    items(communityList) {community ->
+                        CommunityCard(community, onClick = {navController.navigate(Screen.CommunityDetail.route)})
+                    }
+
+                }
+                CommunityFilterBottomSheet(
+                    communityViewModel = communityViewModel,
+                    isVisible = showSheet,
+                    sheetState = sheetState,
+                    onDismiss = { showSheet = false },
+                    selectedStatus = selectedStatus,
+                    onStatusChange = { selectedStatus = it },
+                    onApply = {
+                        communityViewModel.getCommunitiesByReligion(selectedStatus)
+                        showSheet = false
+                        scope.launch { sheetState.hide() }
+                    },
+                    onReset = {
+                        selectedStatus = ""
+                    }
+                )
+            }
+            1 -> Text("My Communities content here")
+        }
+
     }
+
+
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CommunityTopBar(
+    navController: NavController
+) {
+    TopAppBar(
+        modifier = Modifier
+            .shadow(
+                elevation = Dimensions.TopBarElevation
+            ),
+        title = {
+            Text(
+                modifier = Modifier.padding(start = Dimensions.TopBarHorizontalPadding),
+                text = "Community",
+                fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+            )
+        },
+        actions = {
+            IconButton(
+                modifier = Modifier.padding(Dimensions.TopBarHorizontalPadding),
+                onClick = { navController.navigate(Screen.AddTrip.route) {
+                    launchSingleTop = true
+                } }) {
+                Icon(Icons.Outlined.Add, "Add")
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = BackgroundColor
+        ),
+    )
 }
 
 @Composable
 private fun CommunityCard(community: Community, onClick: () -> Unit) {
-    Card(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1f)
-            .clickable{onClick()},
-        shape = RoundedCornerShape(10.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = CreamyBrown
-        )
+            .height(200.dp)
+            .clip(RoundedCornerShape(Dimensions.BoxRadius))
+            .clickable { onClick() },
     ) {
-        Column {
             Image(
-                painter = painterResource(id = community.image),
+                painter = painterResource(id = R.drawable.mosque1),
                 contentDescription = "image",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
+                    .fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            Column(
-                modifier = Modifier.padding(8.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomStart)
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .padding(horizontal = 12.dp, vertical = 16.dp)
             ) {
-                Text(
-                    community.title,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold))
-                Spacer(modifier = Modifier.height(4.dp))
                 Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        "View Group",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Primary
-                    )
-                    Spacer(Modifier.width(4.dp))
+                    Column() {
+                        Text(
+                            community.name,
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold, color = Color.White))
+                        Modifier.height(4.dp)
+                        Text(
+                            "Kristen | International",
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium, color = Color.White))
+                    }
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = "Arrow Forward",
-                        modifier = Modifier.size(16.dp),
-                        tint = Primary
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.White
                     )
                 }
+
             }
-        }
     }
 }
 
 @Composable
-private fun FilterChip(text: String) {
+private fun FilterChip(text: String, onClick: () -> Unit) {
     AssistChip(
-        onClick = { /* TODO */ },
+        onClick = onClick,
         label = { Text(
             text,
             color = Primary,
             style = MaterialTheme.typography.bodySmall
         ) },
-        leadingIcon = {
-            Icon(Icons.Default.ArrowDropDown,
+        trailingIcon = {
+            Icon(Icons.Outlined.ArrowDropDown,
                 contentDescription = "Dropdown",
                 tint = DarkBrown) },
         colors = AssistChipDefaults.assistChipColors(

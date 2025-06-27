@@ -37,10 +37,10 @@ fun FormTrip(
     onNameChange: (String) -> Unit,
     description:String,
     onDescriptionChange:(String) -> Unit,
-    startDate: Timestamp,
-    onStartDateChange:(Timestamp) -> Unit,
-    endDate:Timestamp,
-    onEndDateChange:(Timestamp) -> Unit,
+    startDate: String,
+    onStartDateChange:(String) -> Unit,
+    endDate:String,
+    onEndDateChange:(String) -> Unit,
     imageUri: String
 ) {
     NameSection(name = name, onNameChange = onNameChange)
@@ -56,17 +56,12 @@ private fun NameSection(name: String, onNameChange: (String) -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = Dimensions.OuterPadding, vertical = 12.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(Icons.Outlined.DateRange, contentDescription = null, tint = Color.Black)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Name",
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                color = Color.Black
-            )
-        }
+
+        Text(
+            text = "Name",
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+            color = Color.Black
+        )
         Spacer(Modifier.height(8.dp))
         BasicTextField(
             value = name,
@@ -103,17 +98,12 @@ private fun DescriptionSection(description: String, onDescriptionChange: (String
             .fillMaxWidth()
             .padding(horizontal = Dimensions.OuterPadding, vertical = 12.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(Icons.Outlined.DateRange, contentDescription = null, tint = Color.Black)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Description",
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                color = Color.Black
-            )
-        }
+
+        Text(
+            text = "Description",
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+            color = Color.Black
+        )
         Spacer(Modifier.height(8.dp))
         BasicTextField(
             value = description,
@@ -143,7 +133,7 @@ private fun DescriptionSection(description: String, onDescriptionChange: (String
 }
 
 @Composable
-private fun DateSection(startDate: Timestamp, onStartDateChange: (Timestamp) -> Unit, endDate: Timestamp, onEndDateChange: (Timestamp) -> Unit) {
+private fun DateSection(startDate: String, onStartDateChange: (String) -> Unit, endDate: String, onEndDateChange: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

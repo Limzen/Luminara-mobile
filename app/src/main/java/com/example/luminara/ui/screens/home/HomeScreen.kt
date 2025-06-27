@@ -1,5 +1,6 @@
 package com.example.luminara.ui.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +30,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,8 +47,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.luminara.R
+import com.example.luminara.data.model.Directory
 import com.example.luminara.data.model.ReligionType
 import com.example.luminara.data.model.Location
 import com.example.luminara.navigation.Screen
@@ -115,7 +120,6 @@ val locations = listOf<Location>(
 fun HomeTopBar(
     navController: NavController
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -156,6 +160,14 @@ fun HomeScreen(
     innerPadding: PaddingValues
 ) {
     var searchQuery by remember { mutableStateOf("") }
+
+    val directoryViewModel: DirectoryViewModel = viewModel()
+    val directories by directoryViewModel.directories.collectAsState()
+
+    LaunchedEffect(Unit) {
+        directoryViewModel.fetchDirectories()
+    }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -187,7 +199,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
             item{
-                PopularSection(navController = navController)
+                PopularSection(navController = navController, directories = directories)
             }
             item{
                 Spacer(modifier = Modifier.height(12.dp))
@@ -341,8 +353,10 @@ private fun ReligionTypeSection(list: List<ReligionType>) {
 
 @Composable
 private fun PopularSection(
-    navController: NavController
+    navController: NavController,
+    directories: List<Directory>
 ) {
+    println("directory $directories")
     Column(
         modifier = Modifier
             .padding(horizontal = Dimensions.OuterPadding)
@@ -353,7 +367,7 @@ private fun PopularSection(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            locations.forEach { site ->
+            directories.forEach { site ->
                 item {
                     VerticalSitesCard(navController = navController)
                 }
