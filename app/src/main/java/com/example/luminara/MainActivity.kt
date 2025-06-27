@@ -17,6 +17,8 @@ import com.example.luminara.navigation.NavGraphSetup
 import com.example.luminara.ui.components.BottomBar
 import com.example.luminara.ui.screens.community.CommunityTopBar
 import com.example.luminara.ui.screens.home.HomeTopBar
+import com.example.luminara.ui.screens.chatbot.ChatBotScreen
+import com.example.luminara.ui.screens.chatbot.ChatbotTopBar
 import com.example.luminara.ui.screens.trip.TripTopBar
 import com.example.luminara.ui.theme.LuminaraTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +44,7 @@ class MainActivity : ComponentActivity() {
                             "home" -> HomeTopBar(navController = navController)
                             "trip" -> TripTopBar(navController = navController)
                             "community" -> CommunityTopBar(navController = navController)
+                            "chatbot" -> ChatbotTopBar(navController = navController)
                         }
                     },
                     modifier = Modifier.fillMaxSize().navigationBarsPadding(),

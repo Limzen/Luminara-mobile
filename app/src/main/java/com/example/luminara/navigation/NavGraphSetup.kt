@@ -23,6 +23,7 @@ import com.example.luminara.ui.screens.itinerary.DetailItinerary
 import com.example.luminara.ui.screens.itinerary.EditItinerary
 import com.example.luminara.ui.screens.trip.TripScreen
 import com.example.luminara.ui.screens.login.LoginScreen
+import com.example.luminara.ui.screens.chatbot.ChatBotScreen
 import com.example.luminara.ui.screens.profile.MyProfileScreen
 import com.example.luminara.ui.screens.profile.ProfileScreen
 import com.example.luminara.ui.screens.signup.SignUpScreen
@@ -92,7 +93,7 @@ fun NavGraphSetup(
             CommunityDetailScreen(navController = navController)
         }
         composable(Screen.Chatbot.route) {
-
+            ChatBotScreen(innerPadding = innerPadding)
         }
         composable(Screen.Account.route) {
             ProfileScreen(navController = navController)

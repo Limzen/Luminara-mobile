@@ -1,4 +1,4 @@
-package com.example.luminara.ui.screens.profile
+package com.example.luminara.ui.screens.chatbot
 import com.example.luminara.ui.components.ChatSuggestionCard
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 
@@ -15,17 +16,48 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.luminara.navigation.Screen
+import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.Primary
+import com.example.luminara.utils.Dimensions
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChatbotTopBar(
+    navController: NavController
+) {
+    TopAppBar(
+        modifier = Modifier
+            .shadow(
+                elevation = Dimensions.TopBarElevation
+            ),
+        title = {
+            Text(
+                modifier = Modifier.padding(start = Dimensions.TopBarHorizontalPadding),
+                text = "Chatbot",
+                fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = BackgroundColor
+        ),
+    )
+}
 
 @Composable
-fun ChatBotScreen() {
+fun ChatBotScreen(
+    innerPadding: PaddingValues
+) {
     val backgroundColor = Color(0xFF864A11)
     val cardBorderColor = Color(0xFFAD7C52)
     val roundedShape = RoundedCornerShape(20.dp)
@@ -34,44 +66,15 @@ fun ChatBotScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(
+                PaddingValues(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding()
+                )
+            )
+            .padding(top = 12.dp)
             .background(Color.White)
     ) {
-        // Header
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .background(color = Primary)
-        ) {
-            Text(
-                text = "Chat Bot",
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 38.dp, start = 10.dp)
-            )
-
-            Box(
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 32.dp)
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFA56533))
-                    .clickable {  },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color.White
-
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
 
         // Greeting Section
         Column(
