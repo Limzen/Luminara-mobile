@@ -86,7 +86,7 @@ fun NavGraphSetup(
         }
 
         composable(Screen.Community.route) {
-            CommunityScreen(navController = navController)
+            CommunityScreen(navController = navController,innerPadding = innerPadding)
         }
         composable(Screen.CommunityDetail.route) {
             CommunityDetailScreen(navController = navController)

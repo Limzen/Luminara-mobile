@@ -1,14 +1,10 @@
 package com.example.luminara.ui.screens.trip
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,29 +13,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.SheetState
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -53,17 +42,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.luminara.R
-import com.example.luminara.data.model.Itinerary
 import com.example.luminara.data.model.Trip
 import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.theme.BackgroundColor
-import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -76,15 +60,9 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.luminara.data.model.BottomSheetAction
 import com.example.luminara.ui.components.BasicBottomSheet
-import com.example.luminara.ui.screens.home.DirectoryViewModel
 import com.example.luminara.utils.DateUtils
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
-import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,7 +86,9 @@ fun TripTopBar(
         actions = {
             IconButton(
                 modifier = Modifier.padding(Dimensions.TopBarHorizontalPadding),
-                onClick = { navController.navigate(Screen.AddTrip.route) }) {
+                onClick = { navController.navigate(Screen.AddTrip.route) {
+                    launchSingleTop = true
+                } }) {
                 Icon(Icons.Outlined.Add, "Add")
             }
         },
@@ -137,20 +117,34 @@ fun TripScreen(
     var sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showSheet by remember { mutableStateOf(false) }
+
+
     val actions = listOf(
         BottomSheetAction(
             label = "Edit",
             icon = Icons.Outlined.Edit,
             onClick = {
                 selectedTrip?.let {
-                    navController.navigate(Screen.EditTrip.createRoute(it.id))
+                    navController.navigate(Screen.EditTrip.createRoute(it.id)) {
+                        launchSingleTop = true
+                    }
                 }
             }
         ),
         BottomSheetAction(
             label = "Delete",
             icon = Icons.Outlined.Delete,
-            onClick = { /* Handle delete action */ }
+            onClick = {
+                selectedTrip?.let { trip ->
+                  tripViewModel.deleteTrip(
+                      trip.id,
+                      onSuccess = {
+                      },
+                      onError = {
+                      }
+                  )
+                }
+            }
         )
     )
 

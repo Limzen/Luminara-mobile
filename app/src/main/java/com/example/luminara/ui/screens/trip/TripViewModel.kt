@@ -1,6 +1,8 @@
 package com.example.luminara.ui.screens.trip
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.luminara.data.model.Directory
@@ -18,7 +20,6 @@ class TripViewModel: ViewModel() {
 
     private val _selectedTrip = MutableStateFlow<Trip?>(null)
     val selectedTrip: StateFlow<Trip?> = _selectedTrip
-
 
     fun fetchTrips() {
         viewModelScope.launch {
@@ -66,6 +67,19 @@ class TripViewModel: ViewModel() {
                 onSuccess()
             } catch (e: Exception) {
                 e.printStackTrace()
+                onError()
+            }
+        }
+    }
+
+    fun deleteTrip(id: Long, onSuccess: () -> Unit, onError: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                repository.deleteTrip(id)
+                fetchTrips()
+                onSuccess()
+            } catch (e: Exception) {
+                Log.e("TripsViewModel", "Error deleting trip: ${e.message}")
                 onError()
             }
         }
