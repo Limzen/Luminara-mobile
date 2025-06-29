@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.room.util.query
 import com.example.luminara.R
 import com.example.luminara.data.model.Directory
 import com.example.luminara.data.model.ReligionType
@@ -59,6 +60,8 @@ import com.example.luminara.ui.components.HorizontalSitesCard
 import com.example.luminara.ui.components.ReligionTypeChip
 import com.example.luminara.ui.components.SearchTextField
 import com.example.luminara.ui.components.VerticalSitesCard
+import com.example.luminara.ui.screens.profile.UserViewModel
+import com.example.luminara.ui.screens.trip.TripViewModel
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.MiniHeading
 import com.example.luminara.ui.theme.OnPrimary
@@ -118,22 +121,27 @@ val locations = listOf<Location>(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopBar(
-    navController: NavController
+    navController: NavController,
+    userViewModel: UserViewModel
 ) {
+    var searchQuery by remember { mutableStateOf("") }
+    val currentUser by userViewModel.currentUser.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Primary)
             .padding(bottom = 12.dp, start = Dimensions.OuterPadding, end = Dimensions.OuterPadding)
     ) {
         TopAppBar(
             title = {
-                Text(
-                    text = "Hi, Cristie",
-                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                    fontWeight = FontWeight.Bold,
-                    color = OnPrimary
-                )
+                currentUser?.let { user ->
+                    Text(
+                        text = "Hi, ${user.username}!",
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
             },
             actions = {
                 IconButton(onClick = {  }) {
@@ -141,14 +149,18 @@ fun HomeTopBar(
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Primary
+                containerColor = BackgroundColor
             ),
         )
         SearchTextField(
-            value = "",
-            onValueChange = {},
+            value = searchQuery,
+            onValueChange = {searchQuery = it},
             placeholder = "Where to go?",
-            onClick = {navController.navigate(Screen.HomeSearch.route)}
+            onClick = {
+                if(searchQuery.isNotBlank()) {
+                    navController.navigate(Screen.HomeSearch.createRoute(searchQuery))
+                }
+            }
         )
     }
 }
@@ -157,10 +169,9 @@ fun HomeTopBar(
 @Composable
 fun HomeScreen(
     navController: NavController,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    userViewModel: UserViewModel
 ) {
-    var searchQuery by remember { mutableStateOf("") }
-
     val directoryViewModel: DirectoryViewModel = viewModel()
     val directories by directoryViewModel.directories.collectAsState()
 

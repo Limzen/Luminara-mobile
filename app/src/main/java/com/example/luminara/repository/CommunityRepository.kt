@@ -12,4 +12,8 @@ class CommunityRepository {
     suspend fun getCommunitiesByReligion(religion: String): List<Community> {
         return RetrofitInstance.communityApi.getCommunitiesByReligion(religion)
     }
+
+    suspend fun addCommunity(community: Community): Community {
+        return RetrofitInstance.communityApi.addCommunity(community)
+    }
 }

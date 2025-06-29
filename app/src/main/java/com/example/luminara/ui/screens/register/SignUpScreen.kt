@@ -1,4 +1,4 @@
-package com.example.luminara.ui.screens.signup
+package com.example.luminara.ui.screens.register
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,23 +18,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.luminara.data.datastore.UserDataStore
+import com.example.luminara.data.model.User
 import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.AuthButton
 import com.example.luminara.ui.components.AuthTextField
+import com.example.luminara.ui.screens.profile.UserViewModel
+import com.example.luminara.ui.screens.trip.TripViewModel
 import com.example.luminara.ui.theme.BlueText
 
 
 @Composable
 fun SignUpScreen (
-    navController: NavController
+    navController: NavController,
+    userViewModel: UserViewModel
 ){
+
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
 
 
     Column(
@@ -90,24 +97,22 @@ fun SignUpScreen (
             isPassword = true
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = "Confirm Password",
-            style = MaterialTheme.typography.titleMedium,
-        )
-
-        AuthTextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            placeholder = "Confirm Password",
-            isPassword = true
-        )
-
         Spacer(modifier = Modifier.height(32.dp))
 
         AuthButton(
-            onClick = { /* TODO */ },
+            onClick = {
+                userViewModel.register(
+                    User(
+                        email = email,
+                        password = password,
+                        username = username
+                    ),
+                    onSuccess = {
+                        navController.navigate(Screen.Login.route)
+                    },
+                    onError = {}
+                )
+            },
             text = "Sign Up",
         )
 
@@ -133,8 +138,6 @@ fun SignUpScreen (
                         navController.navigate(Screen.Login.route)
                     }
             )
-
-
         }
     }
 }

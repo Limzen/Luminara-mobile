@@ -24,11 +24,13 @@ import androidx.navigation.NavController
 import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.AuthButton
 import com.example.luminara.ui.components.AuthTextField
+import com.example.luminara.ui.screens.profile.UserViewModel
 import com.example.luminara.ui.theme.BlueText
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
+    userViewModel: UserViewModel
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -93,7 +95,17 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         AuthButton(
-            onClick = { navController.navigate(Screen.Home.route) },
+            onClick = {
+                userViewModel.login(
+                    email = email,
+                    password = password,
+                    onSuccess = {
+                        navController.navigate(Screen.Home.route)
+                    },
+                    onError = {}
+                )
+
+            },
             text = "Login",
         )
 

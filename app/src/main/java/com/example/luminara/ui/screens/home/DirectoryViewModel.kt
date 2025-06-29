@@ -11,8 +11,12 @@ import kotlinx.coroutines.launch
 
 class DirectoryViewModel : ViewModel() {
     private val repository = DirectoryRepository()
+
     private val _directories = MutableStateFlow<List<Directory>>(emptyList())
     val directories: StateFlow<List<Directory>> = _directories
+
+    private val _searchResults = MutableStateFlow<List<Directory>>(emptyList())
+    val searchResults: StateFlow<List<Directory>> = _searchResults
 
     fun fetchDirectories() {
         viewModelScope.launch {
@@ -23,6 +27,17 @@ class DirectoryViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("DirectoryViewModel", "Error fetching directories: ${e.message}")
                 e.printStackTrace()
+            }
+        }
+    }
+
+    fun searchDirectories(query: String) {
+        viewModelScope.launch {
+            try {
+                val result = repository.searchDirectories(query)
+                _searchResults.value = result
+            } catch (e: Exception) {
+                Log.e("Search", "Error: ${e.message}")
             }
         }
     }

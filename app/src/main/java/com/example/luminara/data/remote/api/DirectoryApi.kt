@@ -2,8 +2,12 @@ package com.example.luminara.data.remote.api
 
 import com.example.luminara.data.model.Directory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface DirectoryApi {
-    @GET("directories")
+    @GET("directory")
     suspend fun getDirectories(): List<Directory>
+
+    @GET("directory/search")
+    suspend fun searchDirectories(@Query("q") query: String): List<Directory>
 }

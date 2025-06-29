@@ -1,5 +1,6 @@
 package com.example.luminara.ui.screens.community
 
+import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -73,6 +74,7 @@ import androidx.navigation.NavController
 import com.example.luminara.R
 import com.example.luminara.data.model.Community
 import com.example.luminara.navigation.Screen
+import com.example.luminara.ui.components.BasicScrollableTab
 import com.example.luminara.ui.screens.trip.TripViewModel
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.CreamyBrown
@@ -86,14 +88,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun CommunityScreen(
     navController: NavController,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    communityViewModel: CommunityViewModel
 ) {
-    val communityViewModel: CommunityViewModel = viewModel()
     val communityList by communityViewModel.communities.collectAsState()
 
     LaunchedEffect(Unit) {
         communityViewModel.getCommunities()
     }
+
 
     var showSheet by remember { mutableStateOf(false)}
     var sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -102,7 +105,7 @@ fun CommunityScreen(
     val filterItems = listOf(selectedStatus)
 
 
-    val tabTitles = listOf("All", "Personal")
+    val tabTitles = listOf("All", "Joined")
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
     Column(
@@ -119,38 +122,12 @@ fun CommunityScreen(
     ) {
         Spacer(Modifier.height(8.dp))
 
-        ScrollableTabRow(
+        BasicScrollableTab(
+            tabTitles = tabTitles,
             selectedTabIndex = selectedTabIndex,
-            edgePadding = 0.dp, // no padding on sides
-            indicator = { tabPositions ->
-                val currentTabPosition = tabPositions[selectedTabIndex]
-                val indicatorOffset = animateDpAsState(currentTabPosition.left).value
+            onTabSelected = {it -> selectedTabIndex = it}
+        )
 
-                Box(
-                    Modifier
-                        .wrapContentSize(Alignment.BottomStart)
-                        .offset(x = indicatorOffset)
-                        .width(currentTabPosition.width)
-                        .height(2.dp)
-                        .background(Primary, shape = RoundedCornerShape(8.dp))
-                )
-            },
-            divider = {} // no divider line at bottom
-        ) {
-            tabTitles.forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
-                    text = {
-                        Text(
-                            text = title,
-                            color = if (selectedTabIndex == index) DarkText else Color.Gray,
-                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-                        )
-                    }
-                )
-            }
-        }
         Spacer(modifier = Modifier.height(2.dp))
         when (selectedTabIndex) {
             0 -> {
@@ -175,12 +152,15 @@ fun CommunityScreen(
                         }
                     }
                     items(communityList) {community ->
-                        CommunityCard(community, onClick = {navController.navigate(Screen.CommunityDetail.route)})
+                        CommunityCard(community, onClick = {
+                            communityViewModel.selectCommunity(community)
+                            navController.navigate(Screen.CommunityDetail.route)
+                        })
+                        Log.d("communityview", "${communityViewModel.selectedCommunity}")
                     }
 
                 }
                 CommunityFilterBottomSheet(
-                    communityViewModel = communityViewModel,
                     isVisible = showSheet,
                     sheetState = sheetState,
                     onDismiss = { showSheet = false },
@@ -227,7 +207,7 @@ fun CommunityTopBar(
         actions = {
             IconButton(
                 modifier = Modifier.padding(Dimensions.TopBarHorizontalPadding),
-                onClick = { navController.navigate(Screen.AddTrip.route) {
+                onClick = { navController.navigate(Screen.AddCommunity.route) {
                     launchSingleTop = true
                 } }) {
                 Icon(Icons.Outlined.Add, "Add")
@@ -273,7 +253,7 @@ private fun CommunityCard(community: Community, onClick: () -> Unit) {
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold, color = Color.White))
                         Modifier.height(4.dp)
                         Text(
-                            "Kristen | International",
+                            "${community.religion} | International",
                             style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium, color = Color.White))
                     }
                     Icon(

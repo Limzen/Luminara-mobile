@@ -7,4 +7,8 @@ class DirectoryRepository {
     suspend fun getDirectories(): List<Directory> {
         return RetrofitInstance.directoryApi.getDirectories()
     }
+
+    suspend fun searchDirectories(query: String): List<Directory> {
+        return RetrofitInstance.directoryApi.searchDirectories(query)
+    }
 }

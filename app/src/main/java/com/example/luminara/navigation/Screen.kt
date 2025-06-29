@@ -13,7 +13,9 @@ data class ScaffoldConfig(
 
 sealed class Screen(val route: String) {
     data object Home: Screen("home")
-    data object HomeSearch: Screen("home_search")
+    data object HomeSearch: Screen("home_search/{query}") {
+        fun createRoute(query:String) = "home_search/$query"
+    }
     data object SiteDetail: Screen("site_detail")
     data object Guide: Screen("guide")
 
@@ -30,6 +32,7 @@ sealed class Screen(val route: String) {
 
     data object Community: Screen("community")
     data object CommunityDetail: Screen("community_detail")
+    data object AddCommunity: Screen("add_community")
 
     data object Chatbot: Screen("chatbot")
 
@@ -46,6 +49,6 @@ val allScreens = listOf(
     Screen.Chatbot, Screen.Account, Screen.HomeSearch, Screen.SiteDetail, Screen.Guide,
     Screen.EditItinerary, Screen.DetailItinerary, Screen.AddItinerary, Screen.AddTrip, Screen.EditTrip,
     Screen.MyProfile, Screen.PasswordManager,
-    Screen.CommunityDetail,
+    Screen.CommunityDetail, Screen.AddCommunity,
     Screen.Login, Screen.SignUp
 )

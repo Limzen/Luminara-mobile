@@ -1,13 +1,9 @@
 package com.example.luminara.ui.screens.trip
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.luminara.data.model.Directory
 import com.example.luminara.data.model.Trip
-import com.example.luminara.repository.DirectoryRepository
 import com.example.luminara.repository.TripRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +17,7 @@ class TripViewModel: ViewModel() {
     private val _selectedTrip = MutableStateFlow<Trip?>(null)
     val selectedTrip: StateFlow<Trip?> = _selectedTrip
 
-    fun fetchTrips() {
+    fun getTrips() {
         viewModelScope.launch {
             try {
                 val result = repository.getTrips()
@@ -34,7 +30,7 @@ class TripViewModel: ViewModel() {
         }
     }
 
-    fun fetchTripById(id: Long) {
+    fun getTripById(id: Long) {
         viewModelScope.launch {
             try {
                 val trip = repository.getTripById(id)
@@ -49,7 +45,7 @@ class TripViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 repository.addTrip(trip)
-                fetchTrips() // Refresh list
+                getTrips() // Refresh list
                 onSuccess()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -63,7 +59,7 @@ class TripViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 repository.editTrip(trip)
-                fetchTrips() // refresh
+                getTrips() // refresh
                 onSuccess()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -76,7 +72,7 @@ class TripViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 repository.deleteTrip(id)
-                fetchTrips()
+                getTrips()
                 onSuccess()
             } catch (e: Exception) {
                 Log.e("TripsViewModel", "Error deleting trip: ${e.message}")

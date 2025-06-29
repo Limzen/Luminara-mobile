@@ -22,7 +22,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.luminara.ui.theme.GrayBackground
+import com.example.luminara.ui.theme.LightGray
 import com.example.luminara.ui.theme.OnPrimary
+import com.example.luminara.ui.theme.Secondary
 
 @Composable
 fun SearchTextField(
@@ -44,9 +47,8 @@ fun SearchTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(40.dp)
-                    .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
                     .clip(RoundedCornerShape(10.dp))
-                    .background(OnPrimary)
+                    .background(GrayBackground)
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -63,7 +65,7 @@ fun SearchTextField(
                 if(value.isEmpty()) {
                     Text(
                         text = placeholder,
-                        color = Color.Gray,
+                        color = Secondary,
                         fontSize = 14.sp
                     )
                 }

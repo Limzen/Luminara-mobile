@@ -1,6 +1,9 @@
 package com.example.luminara.ui.screens.itinerary
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -71,6 +74,7 @@ import androidx.navigation.NavController
 import com.example.luminara.R
 import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.BackButton
+import com.example.luminara.ui.components.TopCircularIconButton
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.DarkBrown
 import com.example.luminara.ui.theme.DarkText
@@ -96,7 +100,6 @@ fun DetailItinerary(
             scrollState.firstVisibleItemIndex > 1 ||
                     (scrollState.firstVisibleItemIndex == 1 && scrollState.firstVisibleItemScrollOffset > 0)
         }
-
     }
 
     var sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -109,7 +112,6 @@ fun DetailItinerary(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
-
         LazyColumn(
             state = scrollState
         ) {
@@ -230,46 +232,19 @@ fun DetailItinerary(
                 }
             }
         }
-        if (!showTitle.value) {
-            IconButton(
-                onClick = {
-                    navController.popBackStack() },
-                modifier = Modifier
-                    .padding(top = 40.dp, start = Dimensions.OuterPadding) // adjust for status bar
-                    .size(40.dp)
-                    .zIndex(10f)
-                    .align(Alignment.TopStart)
-                    .background(color = Color.White.copy(alpha = 0.9f), shape = CircleShape)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color.Black
-                )
-            }
-        }
-        if(showSheet) {
-            BottomSheet(
-                closeSheet = {showSheet = false},
-                sheetState = sheetState,
-                onEditClick = {navController.navigate(Screen.EditItinerary.route)},
-                onDeleteClick = {}
-            )
-        }
-
         LargeTopAppBar(
             modifier = Modifier
                 .shadow(
                     elevation = if (showTitle.value) Dimensions.TopBarElevation else 0.dp
                 ),
             title = {
-                    AnimatedVisibility(visible = showTitle.value) {
-                        Text(
-                            text = "Medan Trip",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                AnimatedVisibility(visible = showTitle.value) {
+                    Text(
+                        text = "Medan Trip",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             },
             navigationIcon = {
                 if (showTitle.value) {
@@ -294,7 +269,25 @@ fun DetailItinerary(
                 scrolledContainerColor = if (showTitle.value) BackgroundColor else Color.Transparent
             ),
 
-        )
+            )
+        if (!showTitle.value) {
+            TopCircularIconButton(
+                icon = Icons.AutoMirrored.Filled.ArrowBack,
+                onClick = {
+                    navController.popBackStack() },
+                modifier = Modifier.align(Alignment.TopStart).padding(start = Dimensions.OuterPadding)
+            )
+        }
+        if(showSheet) {
+            BottomSheet(
+                closeSheet = {showSheet = false},
+                sheetState = sheetState,
+                onEditClick = {navController.navigate(Screen.EditItinerary.route)},
+                onDeleteClick = {}
+            )
+        }
+
+
         FloatingActionButton(
             onClick = {
                 navController.navigate(Screen.AddItinerary.route)

@@ -5,6 +5,7 @@ plugins {
     id ("com.google.devtools.ksp")
     id ("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -90,5 +91,9 @@ dependencies {
     //retrofit
     implementation (libs.retrofit)
     implementation(libs.converter.gson)
+
+    //datastore
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
 }

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -21,24 +20,19 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.luminara.ui.components.RadioComponent
 import com.example.luminara.ui.theme.LightGray
 import com.example.luminara.utils.Dimensions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommunityFilterBottomSheet(
-    communityViewModel: CommunityViewModel,
     isVisible: Boolean,
     sheetState: SheetState,
     onDismiss: () -> Unit,
@@ -48,7 +42,6 @@ fun CommunityFilterBottomSheet(
     onReset: () -> Unit
 ) {
     val religions = listOf<String>("All", "Buddha", "Islam", "Kristen", "Katolik", "Hindu")
-
 
     if (isVisible) {
         ModalBottomSheet(
@@ -64,7 +57,7 @@ fun CommunityFilterBottomSheet(
             ) {
 
                 Text(
-                    text = "Agama",
+                    text = "Religion",
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -104,27 +97,3 @@ fun CommunityFilterBottomSheet(
         }
 }
 
-@Composable
-private fun RadioComponent(
-    text: String,
-    onClick: () -> Unit,
-    selected: Boolean
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.weight(1f)
-        )
-        RadioButton(
-            selected = selected,
-            onClick = { onClick() }
-        )
-    }
-    HorizontalDivider(Modifier.padding(vertical = 4.dp),  DividerDefaults.Thickness, LightGray)
-}
