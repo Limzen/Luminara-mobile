@@ -16,7 +16,9 @@ sealed class Screen(val route: String) {
     data object HomeSearch: Screen("home_search/{query}") {
         fun createRoute(query:String) = "home_search/$query"
     }
-    data object SiteDetail: Screen("site_detail")
+    data object SiteDetail: Screen("site_detail/{id}") {
+        fun createRoute(id: Long) = "site_detail/$id"
+    }
     data object Guide: Screen("guide")
 
 

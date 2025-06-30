@@ -1,5 +1,6 @@
 package com.example.luminara.ui.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,50 +10,80 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.AddCircle
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.luminara.R
+import com.example.luminara.data.model.BottomSheetAction
+import com.example.luminara.data.model.Directory
 import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.BackButton
+import com.example.luminara.ui.components.BasicBottomSheet
 import com.example.luminara.ui.components.ReviewCard
+import com.example.luminara.ui.components.TopCircularIconButton
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.DarkText
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.ui.theme.YellowText
 import com.example.luminara.utils.Dimensions
+import com.example.luminara.utils.TransparentStatusBarActivity
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SiteDetailScreen(
     navController: NavController,
+    id: Long
 ) {
     val imageHeightCollapsed = 80.dp
     val imageHeightExpanded = 250.dp
@@ -79,6 +110,220 @@ fun SiteDetailScreen(
         label = "imageHeight"
     )
 
+    val directoryViewModel: DirectoryViewModel = viewModel()
+    val directory by directoryViewModel.selectedDirectory.collectAsState()
+
+    LaunchedEffect(id) {
+        directoryViewModel.getDirectoryById(id)
+    }
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val showTitle = remember {
+        derivedStateOf {
+            scrollState.firstVisibleItemIndex > 1 ||
+                    (scrollState.firstVisibleItemIndex == 1 && scrollState.firstVisibleItemScrollOffset > 0)
+        }
+    }
+
+    var sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
+    var showSheet by remember { mutableStateOf(false) }
+
+    val actions = listOf(
+        BottomSheetAction(
+            label = "Add To Trip",
+            icon = Icons.Outlined.AddCircle,
+            onClick = {
+
+            }
+        ),
+        BottomSheetAction(
+            label = "View Guide",
+            icon = Icons.Outlined.Info,
+            onClick = {
+
+            }
+        )
+    )
+
+    TransparentStatusBarActivity()
+
+    if(directory == null) {
+        CircularProgressIndicator()
+    } else {
+        Box(
+            modifier = Modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+        ) {
+            LazyColumn(
+                state = scrollState
+            ) {
+                item {
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(320.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.mosque1),
+                            contentDescription = "Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                }
+                item {
+                    Column(modifier = Modifier
+                        .padding(horizontal = Dimensions.OuterPadding)
+                        .padding(top = 20.dp, bottom = 8.dp)
+                    ) {
+                        Text(
+                            text = directory!!.name,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = directory!!.address,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                            color = Color.Gray,
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.DateRange,
+                                contentDescription = "time"
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = directory!!.openingHours,
+                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                                color = Color.Black,
+                            )
+                        }
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            thickness = DividerDefaults.Thickness,
+                            color = DividerDefaults.color
+                        )
+                        Text(
+                            text = "Description",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text =  directory!!.description,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            thickness = DividerDefaults.Thickness,
+                            color = DividerDefaults.color
+                        )
+                        RatingSection()
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            thickness = DividerDefaults.Thickness,
+                            color = DividerDefaults.color
+                        )
+                        ReviewSection()
+                    }
+                }
+            }
+            LargeTopAppBar(
+                modifier = Modifier
+                    .shadow(
+                        elevation = if (showTitle.value) Dimensions.TopBarElevation else 0.dp
+                    ),
+                title = {
+                    AnimatedVisibility(visible = showTitle.value) {
+                        Text(
+                            text = directory!!.name,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                },
+                navigationIcon = {
+                    if (showTitle.value) {
+                        AnimatedVisibility(visible = showTitle.value) {
+                            IconButton(
+                                modifier = Modifier.padding(start = Dimensions.BackIconPadding),
+                                onClick = {
+                                    navController.popBackStack() }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Back"
+                                )
+                            }
+                        }
+                    }
+                },
+                actions = {
+                    if (showTitle.value) {
+                        AnimatedVisibility(visible = showTitle.value) {
+                            IconButton(
+                                modifier = Modifier.padding(end = Dimensions.BackIconPadding),
+                                onClick = {
+                                    showSheet = true
+                                    scope.launch { sheetState.show() }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.MoreVert,
+                                    contentDescription = "More"
+                                )
+                            }
+                        }
+                    }
+                },
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.largeTopAppBarColors(
+                    containerColor = if (showTitle.value) BackgroundColor else Color.Transparent,
+                    scrolledContainerColor = if (showTitle.value) BackgroundColor else Color.Transparent
+                ),
+
+                )
+            if (!showTitle.value) {
+                TopCircularIconButton(
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
+                    onClick = {
+                        navController.popBackStack() },
+                    modifier = Modifier.align(Alignment.TopStart).padding(start = Dimensions.OuterPadding)
+                )
+                TopCircularIconButton(
+                    icon = Icons.Outlined.MoreVert,
+                    onClick = {
+                        showSheet = true
+                        scope.launch { sheetState.show() }
+                    },
+                    modifier = Modifier.align(Alignment.TopEnd).padding(end = Dimensions.OuterPadding)
+                )
+            }
+        }
+        if(showSheet) {
+            BasicBottomSheet(
+                closeSheet = {
+                    showSheet = false
+                    scope.launch { sheetState.hide() }
+                },
+                sheetState = sheetState,
+                actions = actions
+            )
+        }
+    }
+
+}
+
+/*private fun Main() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -134,7 +379,7 @@ fun SiteDetailScreen(
                         top = Dimensions.OuterPadding)
             ) {
                 item {
-                  TopHeader()
+                    TopHeader(directory = directory!!)
                 }
                 item {
                     Spacer(Modifier.height(12.dp))
@@ -159,11 +404,15 @@ fun SiteDetailScreen(
     }
 }
 
+ */
+
 @Composable
-private fun TopHeader() {
+private fun TopHeader(
+    directory: Directory
+) {
     Column() {
         Text(
-            text = "Al-Mashun Grand Mosque",
+            text = directory.name,
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
         Spacer(Modifier.height(16.dp))
@@ -274,11 +523,27 @@ private fun RatingSection() {
 
     Column() {
         Text(
-            text = "Ratings & Reviews ($totalReviews)",
+            text = "Ratings",
             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Text(
+                text = "4.5",
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(Modifier.width(4.dp))
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = "Star",
+                tint = YellowText,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        /* Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(110.dp),
@@ -358,6 +623,7 @@ private fun RatingSection() {
                 }
             }
         }
+         */
     }
 }
 

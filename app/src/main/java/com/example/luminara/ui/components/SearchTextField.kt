@@ -26,6 +26,7 @@ import com.example.luminara.ui.theme.GrayBackground
 import com.example.luminara.ui.theme.LightGray
 import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Secondary
+import com.example.luminara.utils.Dimensions
 
 @Composable
 fun SearchTextField(
@@ -35,6 +36,7 @@ fun SearchTextField(
     onClick: () -> Unit
 ) {
     BasicTextField(
+        modifier = Modifier.padding(horizontal = Dimensions.OuterPadding),
         value = value,
         onValueChange = onValueChange,
         singleLine = true,

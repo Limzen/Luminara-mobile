@@ -47,7 +47,7 @@ fun NavGraphSetup(
     val communityViewModel: CommunityViewModel = viewModel()
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route,
+        startDestination = Screen.Home.route,
     ) {
         composable(Screen.Login.route) {
             LoginScreen(navController = navController, userViewModel = userViewModel)
@@ -65,10 +65,14 @@ fun NavGraphSetup(
         ) { backStackEntry ->
             val query = backStackEntry.arguments?.getString("query") ?: ""
             Log.d("search", query)
-            SearchScreen(navController = navController, innerPadding = innerPadding, query = query)
+            SearchScreen(navController = navController, innerPadding = innerPadding, query = query, userViewModel = userViewModel)
         }
-        composable(Screen.SiteDetail.route) {
-            SiteDetailScreen(navController = navController)
+        composable(
+            route = Screen.SiteDetail.route,
+            arguments = listOf(navArgument("id") {type = NavType.LongType})
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id") ?: 0L
+            SiteDetailScreen(navController = navController, id=id)
         }
         composable(Screen.Guide.route) {
             GuideScreen(navController = navController)

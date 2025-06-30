@@ -18,6 +18,9 @@ class DirectoryViewModel : ViewModel() {
     private val _searchResults = MutableStateFlow<List<Directory>>(emptyList())
     val searchResults: StateFlow<List<Directory>> = _searchResults
 
+    private val _selectedDirectory = MutableStateFlow<Directory?>(null)
+    val selectedDirectory: StateFlow<Directory?> = _selectedDirectory
+
     fun fetchDirectories() {
         viewModelScope.launch {
             try {
@@ -38,6 +41,18 @@ class DirectoryViewModel : ViewModel() {
                 _searchResults.value = result
             } catch (e: Exception) {
                 Log.e("Search", "Error: ${e.message}")
+            }
+        }
+    }
+
+
+    fun getDirectoryById(id: Long) {
+        viewModelScope.launch {
+            try {
+                val result = repository.getDirectoryById(id)
+                _selectedDirectory.value = result
+            } catch (e: Exception) {
+                Log.e("DirectoryViewModel", "Error fetching directory: ${e.message}")
             }
         }
     }

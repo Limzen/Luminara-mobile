@@ -124,7 +124,6 @@ fun HomeTopBar(
     navController: NavController,
     userViewModel: UserViewModel
 ) {
-    var searchQuery by remember { mutableStateOf("") }
     val currentUser by userViewModel.currentUser.collectAsState()
 
     Column(
@@ -153,13 +152,11 @@ fun HomeTopBar(
             ),
         )
         SearchTextField(
-            value = searchQuery,
-            onValueChange = {searchQuery = it},
+            value = "",
+            onValueChange = {},
             placeholder = "Where to go?",
             onClick = {
-                if(searchQuery.isNotBlank()) {
-                    navController.navigate(Screen.HomeSearch.createRoute(searchQuery))
-                }
+                navController.navigate(Screen.HomeSearch.createRoute(""))
             }
         )
     }
@@ -183,7 +180,10 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    PaddingValues(top = innerPadding.calculateTopPadding(), bottom = innerPadding.calculateBottomPadding())
+                    PaddingValues(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = innerPadding.calculateBottomPadding()
+                    )
                 )
                 .background(color = BackgroundColor)
         )
@@ -276,7 +276,11 @@ private fun TopHeader(
         Box(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 125.dp, start = Dimensions.OuterPadding, end = Dimensions.OuterPadding)
+                .padding(
+                    top = 125.dp,
+                    start = Dimensions.OuterPadding,
+                    end = Dimensions.OuterPadding
+                )
         ) {
             Image(
                 painter = painterResource(id = R.drawable.home_img),

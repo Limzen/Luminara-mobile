@@ -11,4 +11,8 @@ class DirectoryRepository {
     suspend fun searchDirectories(query: String): List<Directory> {
         return RetrofitInstance.directoryApi.searchDirectories(query)
     }
+
+    suspend fun getDirectoryById(id: Long): Directory {
+        return RetrofitInstance.directoryApi.getDirectoryById(id)
+    }
 }
