@@ -13,3 +13,12 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+.env
+local.env
+*.env
+!.env.example
+
+.CHATBOT_README.md
+.IMPLEMENTATION_COMPLETE.md
+.SECURITY_IMPLEMENTATION.md

@@ -1,17 +1,16 @@
 package com.example.luminara.ui.screens.chatbot
-import com.example.luminara.ui.components.ChatSuggestionCard
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-
-import com.example.luminara.R
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -23,11 +22,18 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.luminara.R
 import com.example.luminara.navigation.Screen
+import com.example.luminara.ui.components.ChatMessageItem
+import com.example.luminara.ui.components.ChatSuggestionCard
+import com.example.luminara.ui.components.TypingIndicator
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,12 +62,25 @@ fun ChatbotTopBar(
 
 @Composable
 fun ChatBotScreen(
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    viewModel: ChatbotViewModel = hiltViewModel()
 ) {
-    val backgroundColor = Color(0xFF864A11)
-    val cardBorderColor = Color(0xFFAD7C52)
-    val roundedShape = RoundedCornerShape(20.dp)
     var inputText by remember { mutableStateOf("") }
+    val messages by viewModel.messages.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val showQuickActions by viewModel.showQuickActions.collectAsStateWithLifecycle()
+    
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    // Auto scroll to bottom when new messages arrive
+    LaunchedEffect(messages.size) {
+        if (messages.isNotEmpty()) {
+            coroutineScope.launch {
+                listState.animateScrollToItem(messages.size)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -72,80 +91,105 @@ fun ChatBotScreen(
                     bottom = innerPadding.calculateBottomPadding()
                 )
             )
-            .padding(top = 12.dp)
             .background(Color.White)
     ) {
-
-        // Greeting Section
-        Column(
+        // Chat Messages
+        LazyColumn(
+            state = listState,
             modifier = Modifier
+                .weight(1f)
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(top = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(
-                text = "Hi Milano Cherry!",
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Primary
-                )
-            )
-            Text(
-                text = "How may I assist you on your spiritual journey today? 😊",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontStyle = FontStyle.Italic,
-                    color = Color.Gray
-                ),
-                textAlign = TextAlign.Center
-            )
+            // Greeting Section (only shown at the start)
+            if (messages.size == 1) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp, vertical = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Hi Milano Cherry!",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = Primary
+                            )
+                        )
+                        Text(
+                            text = "How may I assist you on your spiritual journey today? 😊",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontStyle = FontStyle.Italic,
+                                color = Color.Gray
+                            ),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+
+            // Chat Messages
+            items(messages) { message ->
+                ChatMessageItem(message = message)
+            }
+
+            // Quick Actions (only shown initially)
+            if (showQuickActions && messages.size == 1) {
+                item {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+                    ) {
+                        Text(
+                            text = "Atau coba pertanyaan populer ini:",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Medium,
+                                color = Color.Gray
+                            ),
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        
+                        viewModel.quickActions.forEach { action ->
+                            ChatSuggestionCard(
+                                title = action.text,
+                                subtitle = action.message,
+                                onClick = { viewModel.sendQuickAction(action.message) }
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Typing indicator
+            if (isLoading) {
+                item {
+                    TypingIndicator()
+                }
+            }
+
+            // Add spacing at the bottom
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
 
-        Spacer(modifier = Modifier.height(36.dp))
-
-        // Chat Suggestions
-        // Chat Suggestions
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(horizontal = 24.dp)
-        ) {
-            ChatSuggestionCard(
-                title = "Brainstorm names",
-                subtitle = "for my fantasy football team with a frog theme",
-                onClick = { /* TODO */ }
-            )
-            ChatSuggestionCard(
-                title = "Suggest calming rituals",
-                subtitle = "for morning mindfulness routines",
-                onClick = { /* TODO */ }
-            )
-            ChatSuggestionCard(
-                title = "Help me reflect",
-                subtitle = "on my current emotional state",
-                onClick = { /* TODO */ }
-            )
-            ChatSuggestionCard(
-                title = "Spiritual quotes",
-                subtitle = "to inspire my day",
-                onClick = { /* TODO */ }
-            )
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-        //bottom bar
         // Bottom Input Bar
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Primary, shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                .background(
+                    color = Primary,
+                    shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+                )
                 .padding(12.dp)
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
                 // Input Field + Image
                 Box(
                     modifier = Modifier
@@ -159,6 +203,7 @@ fun ChatBotScreen(
                             onValueChange = { inputText = it },
                             singleLine = true,
                             textStyle = LocalTextStyle.current.copy(color = Color.Black),
+                            enabled = !isLoading,
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(start = 4.dp)
@@ -166,7 +211,7 @@ fun ChatBotScreen(
                             Box {
                                 if (inputText.isEmpty()) {
                                     Text(
-                                        text = "Ask me anything...",
+                                        text = "Ketik pesan Anda di sini...",
                                         color = Color.Gray,
                                         fontStyle = FontStyle.Italic
                                     )
@@ -181,7 +226,7 @@ fun ChatBotScreen(
                             tint = Color(0xFF814C1A),
                             modifier = Modifier
                                 .size(20.dp)
-                                .clickable { /* TODO */ }
+                                .clickable { /* TODO: Implement image selection */ }
                         )
                     }
                 }
@@ -192,7 +237,7 @@ fun ChatBotScreen(
                         .size(40.dp)
                         .clip(CircleShape)
                         .background(Color(0xFF814C1A))
-                        .clickable { /* TODO */ },
+                        .clickable { /* TODO: Implement voice input */ },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -209,21 +254,22 @@ fun ChatBotScreen(
                         .size(40.dp)
                         .clip(CircleShape)
                         .background(Color(0xFF814C1A))
-                        .clickable { /* TODO */ },
+                        .clickable(enabled = inputText.trim().isNotEmpty() && !isLoading) {
+                            if (inputText.trim().isNotEmpty()) {
+                                viewModel.sendMessage(inputText)
+                                inputText = ""
+                            }
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.send),
                         contentDescription = "Send",
-                        tint = Color.White,
+                        tint = if (inputText.trim().isNotEmpty() && !isLoading) Color.White else Color.Gray,
                         modifier = Modifier.size(20.dp)
                     )
                 }
             }
         }
-
-
-
-
     }
 }
