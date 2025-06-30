@@ -20,15 +20,32 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // 🔐 API Configuration - Secure way to store API URLs
+        buildConfigField("String", "CHATBOT_API_URL", "\"https://bryaneugene-luminara-ai-chatbot.hf.space/\"")
+        buildConfigField("String", "API_KEY", "\"\"")
+        buildConfigField("boolean", "DEBUG_MODE", "true")
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+            // 🔧 Development configuration
+            buildConfigField("String", "CHATBOT_API_URL", "\"https://bryaneugene-luminara-ai-chatbot.hf.space/\"")
+            buildConfigField("String", "API_KEY", "\"\"")
+            buildConfigField("boolean", "DEBUG_MODE", "true")
+        }
+        
         release {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // 🚀 Production configuration
+            buildConfigField("String", "CHATBOT_API_URL", "\"https://bryaneugene-luminara-ai-chatbot.hf.space/\"")
+            buildConfigField("String", "API_KEY", "\"\"")
+            buildConfigField("boolean", "DEBUG_MODE", "false")
         }
     }
     compileOptions {
@@ -40,6 +57,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
