@@ -68,6 +68,7 @@ fun ChatBotScreen(
     var inputText by remember { mutableStateOf("") }
     val messages by viewModel.messages.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val isExtendedWait by viewModel.isExtendedWait.collectAsStateWithLifecycle()
     val showQuickActions by viewModel.showQuickActions.collectAsStateWithLifecycle()
     
     val listState = rememberLazyListState()
@@ -162,10 +163,12 @@ fun ChatBotScreen(
                 }
             }
 
-            // Typing indicator
+            // Typing indicator with informative message
             if (isLoading) {
                 item {
-                    TypingIndicator()
+                    TypingIndicator(
+                        isExtendedWait = isExtendedWait
+                    )
                 }
             }
 

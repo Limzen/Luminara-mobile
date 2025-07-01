@@ -47,7 +47,7 @@ fun NavGraphSetup(
     val communityViewModel: CommunityViewModel = viewModel()
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route,
+        startDestination = Screen.Chatbot.route,
     ) {
         composable(Screen.Login.route) {
             LoginScreen(navController = navController, userViewModel = userViewModel)

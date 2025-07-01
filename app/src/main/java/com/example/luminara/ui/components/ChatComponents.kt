@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -116,7 +117,9 @@ fun ChatMessageItem(
 
 @Composable
 fun TypingIndicator(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    message: String = "Luminara AI sedang berpikir...",
+    isExtendedWait: Boolean = false
 ) {
     Row(
         modifier = modifier
@@ -142,7 +145,7 @@ fun TypingIndicator(
         
         Spacer(modifier = Modifier.width(8.dp))
 
-        // Typing bubble
+        // Typing bubble with custom message
         Box(
             modifier = Modifier
                 .background(
@@ -156,12 +159,41 @@ fun TypingIndicator(
                 )
                 .padding(16.dp)
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                repeat(3) { index ->
-                    TypingDot(delay = index * 200)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Animated dots
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        repeat(3) { index ->
+                            TypingDot(delay = index * 200)
+                        }
+                    }
+                    
+                    // Message text
+                    Text(
+                        text = if (isExtendedWait) "Sedang memproses..." else message,
+                        fontSize = 14.sp,
+                        color = Color.Gray,
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+                
+                // Extended wait message
+                if (isExtendedWait) {
+                    Text(
+                        text = "⏱️ AI sedang memproses dengan teliti (dapat memakan waktu hingga 5 menit)",
+                        fontSize = 12.sp,
+                        color = Color(0xFF666666),
+                        fontStyle = FontStyle.Italic,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
                 }
             }
         }

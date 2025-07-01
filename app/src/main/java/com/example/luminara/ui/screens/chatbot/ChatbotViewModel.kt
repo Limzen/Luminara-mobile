@@ -13,8 +13,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import java.util.Date
 import javax.inject.Inject
+
+/**
+ * Data class to represent the JSON structure of the bot's response.
+ * It must be annotated with @Serializable.
+ */
+@Serializable
+data class BotResponse(
+    val reply: String
+    // You can add other fields from your JSON here if needed, e.g.:
+    // val confidence_score: Double? = null
+)
 
 @HiltViewModel
 class ChatbotViewModel @Inject constructor(
@@ -26,6 +40,9 @@ class ChatbotViewModel @Inject constructor(
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _isExtendedWait = MutableStateFlow(false)
+    val isExtendedWait: StateFlow<Boolean> = _isExtendedWait.asStateFlow()
 
     private val _showQuickActions = MutableStateFlow(true)
     val showQuickActions: StateFlow<Boolean> = _showQuickActions.asStateFlow()
@@ -42,7 +59,7 @@ class ChatbotViewModel @Inject constructor(
             timestamp = Date()
         )
         _messages.value = listOf(initialMessage)
-        
+
         if (ChatbotConfig.DEBUG_MODE) {
             Log.d("ChatbotViewModel", "🔧 Luminara Chatbot - Initialized")
         }
@@ -62,39 +79,75 @@ class ChatbotViewModel @Inject constructor(
 
         _messages.value = _messages.value + userMessage
         _isLoading.value = true
+        _isExtendedWait.value = false
 
         if (ChatbotConfig.DEBUG_MODE) {
             Log.d("ChatbotViewModel", "📤 Sending message: $messageText")
         }
 
         viewModelScope.launch {
-            chatbotRepository.sendMessage(messageText)
-                .onSuccess { response ->
-                    val botMessage = ChatMessage(
-                        text = response,
-                        sender = MessageSender.BOT,
-                        timestamp = Date()
-                    )
-                    _messages.value = _messages.value + botMessage
-                    
+            // Start extended wait timer
+            val extendedWaitJob = launch {
+                delay(30_000) // 30 seconds
+                if (_isLoading.value) {
+                    _isExtendedWait.value = true
                     if (ChatbotConfig.DEBUG_MODE) {
-                        Log.d("ChatbotViewModel", "📥 Received response: $response")
+                        Log.d("ChatbotViewModel", "⏰ Extended wait triggered after 30 seconds")
                     }
                 }
-                .onFailure { error ->
-                    val errorMessage = ChatMessage(
-                        text = ChatbotConfig.ERROR_MESSAGE,
-                        sender = MessageSender.BOT,
-                        timestamp = Date()
-                    )
-                    _messages.value = _messages.value + errorMessage
-                    
-                    if (ChatbotConfig.DEBUG_MODE) {
-                        Log.e("ChatbotViewModel", "❌ Error: ${error.message}")
-                    }
-                }
+            }
 
+            // Add timeout with coroutine timeout
+            try {
+                kotlinx.coroutines.withTimeout(310_000) { // 5.2 menit timeout
+                    chatbotRepository.sendMessage(messageText)
+                        .onSuccess { response -> // `response` is already the final string from repository
+                            val botMessage = ChatMessage(
+                                text = response, // Use the response directly
+                                sender = MessageSender.BOT,
+                                timestamp = Date()
+                            )
+                            _messages.value = _messages.value + botMessage
+
+                            if (ChatbotConfig.DEBUG_MODE) {
+                                Log.d("ChatbotViewModel", "📥 Received Response: $response")
+                            }
+                        }
+                        .onFailure { error ->
+                            val errorMessage = ChatMessage(
+                                text = when {
+                                    error.message?.contains("timeout", ignoreCase = true) == true -> 
+                                        "⏱️ Maaf, server AI sedang lambat. Silakan coba lagi dalam beberapa saat."
+                                    error.message?.contains("network", ignoreCase = true) == true -> 
+                                        "🌐 Koneksi internet bermasalah. Periksa koneksi Anda."
+                                    else -> ChatbotConfig.ERROR_MESSAGE
+                                },
+                                sender = MessageSender.BOT,
+                                timestamp = Date()
+                            )
+                            _messages.value = _messages.value + errorMessage
+
+                            if (ChatbotConfig.DEBUG_MODE) {
+                                Log.e("ChatbotViewModel", "❌ API Error: ${error.message}")
+                            }
+                        }
+                }
+            } catch (timeoutException: kotlinx.coroutines.TimeoutCancellationException) {
+                val timeoutMessage = ChatMessage(
+                    text = "⏱️ Timeout: Server AI Hugging Face sedang sibuk. Silakan coba lagi dalam 1-2 menit.",
+                    sender = MessageSender.BOT,
+                    timestamp = Date()
+                )
+                _messages.value = _messages.value + timeoutMessage
+                
+                if (ChatbotConfig.DEBUG_MODE) {
+                    Log.w("ChatbotViewModel", "⏱️ Coroutine timeout after 5.2 minutes")
+                }
+            }
+
+            extendedWaitJob.cancel()
             _isLoading.value = false
+            _isExtendedWait.value = false
         }
     }
 
