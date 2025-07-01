@@ -1,9 +1,10 @@
 package com.example.luminara.ui.screens.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,32 +12,24 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.ProgressIndicatorDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -51,7 +44,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -60,17 +52,18 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.luminara.R
 import com.example.luminara.data.model.BottomSheetAction
 import com.example.luminara.data.model.Directory
+import com.example.luminara.data.model.Review
 import com.example.luminara.navigation.Screen
-import com.example.luminara.ui.components.BackButton
 import com.example.luminara.ui.components.BasicBottomSheet
-import com.example.luminara.ui.components.ReviewCard
+import com.example.luminara.ui.screens.review.ReviewCard
 import com.example.luminara.ui.components.TopCircularIconButton
+import com.example.luminara.ui.screens.review.ReviewViewModel
 import com.example.luminara.ui.theme.BackgroundColor
 import com.example.luminara.ui.theme.DarkText
 import com.example.luminara.ui.theme.Primary
@@ -79,6 +72,7 @@ import com.example.luminara.utils.Dimensions
 import com.example.luminara.utils.TransparentStatusBarActivity
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SiteDetailScreen(
@@ -113,8 +107,13 @@ fun SiteDetailScreen(
     val directoryViewModel: DirectoryViewModel = viewModel()
     val directory by directoryViewModel.selectedDirectory.collectAsState()
 
+    val reviewViewModel: ReviewViewModel = viewModel()
+    val reviews by reviewViewModel.reviews.collectAsState()
+
+
     LaunchedEffect(id) {
         directoryViewModel.getDirectoryById(id)
+        reviewViewModel.getReviewsByDirectoryId(directoryId = id)
     }
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -163,8 +162,8 @@ fun SiteDetailScreen(
                         .fillMaxWidth()
                         .height(320.dp)
                     ) {
-                        Image(
-                            painter = painterResource(R.drawable.mosque1),
+                        AsyncImage(
+                            model = directory!!.mainImageUrl,
                             contentDescription = "Image",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
@@ -225,7 +224,7 @@ fun SiteDetailScreen(
                             thickness = DividerDefaults.Thickness,
                             color = DividerDefaults.color
                         )
-                        RatingSection()
+                        RatingSection(overallRating = directory!!.overallRating)
                         HorizontalDivider(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -233,7 +232,37 @@ fun SiteDetailScreen(
                             thickness = DividerDefaults.Thickness,
                             color = DividerDefaults.color
                         )
-                        ReviewSection()
+
+                        // reviews section
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            OutlinedButton(
+                                onClick = {
+                                    navController.navigate(Screen.AddReview.createRoute(directory!!.id))
+                                },
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = "Write a review",
+                                    color = DarkText,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+
+                            Spacer(Modifier.height(16.dp))
+
+                            Text(
+                                text = "Reviews",
+                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            reviews.forEach { review ->
+                                ReviewCard(review = review)
+                            }
+                        }
                     }
                 }
             }
@@ -508,7 +537,9 @@ private fun ButtonActionSection(onViewEthics : () -> Unit) {
 }
 
 @Composable
-private fun RatingSection() {
+private fun RatingSection(
+    overallRating: Float
+) {
     val totalReviews = 273
     val averageRating = 4.5f
     val recommendedPercent = 88
@@ -532,7 +563,7 @@ private fun RatingSection() {
         ) {
 
             Text(
-                text = "4.5",
+                text = "$overallRating",
                 style = MaterialTheme.typography.headlineSmall
             )
             Spacer(Modifier.width(4.dp))
@@ -628,33 +659,8 @@ private fun RatingSection() {
 }
 
 @Composable
-private fun ReviewSection() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        OutlinedButton(
-            onClick = {},
-            shape = RoundedCornerShape(10.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = "Write a review",
-                color = DarkText,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+private fun ReviewSection(
+    reviews: List<Review>
+) {
 
-        Spacer(Modifier.height(16.dp))
-
-        Text(
-            text = "Reviews",
-            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        ReviewCard()
-        ReviewCard()
-    }
 }

@@ -176,7 +176,7 @@ fun CommunityScreen(
                     }
                 )
             }
-            1 -> Text("My Communities content here")
+            1 -> Text(modifier = Modifier.padding(horizontal = Dimensions.OuterPadding), text = "You haven't join any community")
         }
 
     }

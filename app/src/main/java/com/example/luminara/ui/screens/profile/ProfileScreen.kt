@@ -78,13 +78,13 @@ fun ProfileScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Cristie Wanna",
+                text = "Andry",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF8B4513)
             )
             Text(
-                text = "cristiewanna123",
+                text = "Andry123",
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             )

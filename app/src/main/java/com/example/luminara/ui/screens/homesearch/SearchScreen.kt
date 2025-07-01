@@ -55,6 +55,7 @@ import com.example.luminara.data.model.Directory
 import com.example.luminara.data.model.Location
 import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.BackButton
+import com.example.luminara.ui.components.HorizontalCard
 import com.example.luminara.ui.components.SearchResult
 import com.example.luminara.ui.components.SearchTextField
 import com.example.luminara.ui.screens.home.DirectoryViewModel
@@ -126,65 +127,10 @@ fun SearchScreen(
             items(results) {result ->
                 HorizontalCard(directory = result, onClick = {
                     navController.navigate(Screen.SiteDetail.createRoute(result.id))
-                })
+                }, imageHeight = 220.dp)
                 Spacer(Modifier.height(8.dp))
             }
         }
     }
 }
 
-@Composable
-private fun HorizontalCard(directory: Directory, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(220.dp)
-            .clip(RoundedCornerShape(Dimensions.BoxRadius))
-            .clickable { onClick() },
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.mosque1),
-            contentDescription = "image",
-            modifier = Modifier
-                .fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomStart)
-                .background(Color.Black.copy(alpha = 0.5f))
-                .padding(horizontal = 12.dp, vertical = 12.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column() {
-                    Text(
-                        directory.name,
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold, color = Color.White))
-                    Modifier.height(4.dp)
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    )
-                    {
-                        Icon(imageVector = Icons.Outlined.Star, contentDescription = "star", tint = YellowText)
-                        Spacer(Modifier.width(2.dp))
-                        Text(
-                            "${directory.overallRating}",
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium, color = Color.White))
-                    }
-                }
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = "Arrow Forward",
-                    modifier = Modifier.size(20.dp),
-                    tint = Color.White
-                )
-            }
-
-        }
-    }
-}

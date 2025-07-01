@@ -1,9 +1,9 @@
-package com.example.luminara.ui.components
+package com.example.luminara.ui.screens.review
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,16 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,14 +26,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.luminara.R
+import com.example.luminara.data.model.Review
 import com.example.luminara.ui.theme.YellowText
+import com.example.luminara.utils.DateUtils
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ReviewCard() {
+fun ReviewCard(
+    review: Review
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -55,34 +56,37 @@ fun ReviewCard() {
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text = "Kristin Watson",
+                text = review.user?.username ?: "Unknown",
                 style = MaterialTheme.typography.bodySmall
             )
         }
 
-        Row {
-            repeat(5) {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = "Star",
-                    tint = YellowText,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "${review.rating}",
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(Modifier.width(4.dp))
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = "Star",
+                tint = YellowText,
+                modifier = Modifier.size(20.dp)
+            )
         }
 
 
     }
     Spacer(modifier = Modifier.height(8.dp))
     Text(
-        text = "A beautiful and peaceful place in the heart of Medan. " +
-                "The architecture is stunning with its blend of Middle Eastern, Indian, and Spanish styles. " +
-                "I felt very welcomed by the staff and locals. A must-visit for anyone interested in religious and cultural heritage.",
+        text = review.reviewText,
         style = MaterialTheme.typography.bodySmall,
         color = Color.DarkGray
     )
     Spacer(modifier = Modifier.height(8.dp))
-    LazyRow(
+   /* LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -98,8 +102,10 @@ fun ReviewCard() {
         }
     }
     Spacer(modifier = Modifier.height(8.dp))
+    */
+
     Text(
-        text = "Nov 09, 2022",
+        text = DateUtils.formatDate(review.createdAt),
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.End,
         style = MaterialTheme.typography.labelSmall,

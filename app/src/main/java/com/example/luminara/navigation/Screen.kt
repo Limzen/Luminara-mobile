@@ -19,12 +19,19 @@ sealed class Screen(val route: String) {
     data object SiteDetail: Screen("site_detail/{id}") {
         fun createRoute(id: Long) = "site_detail/$id"
     }
+    data object AddReview : Screen("add_review/{directoryId}") {
+        fun createRoute(directoryId: Long) = "add_review/$directoryId"
+    }
     data object Guide: Screen("guide")
 
 
     data object Trip: Screen("trip")
-    data object DetailItinerary: Screen("detail_itinerary")
-    data object AddItinerary: Screen("add_itinerary")
+    data object DetailItinerary: Screen("detail_itinerary/{tripId}") {
+        fun createRoute(tripId: Long) = "detail_itinerary/$tripId"
+    }
+    data object AddItinerary: Screen("add_itinerary/{tripId}") {
+        fun createRoute(tripId: Long) = "add_itinerary/$tripId"
+    }
     data object EditItinerary: Screen("edit_itinerary")
     data object AddTrip: Screen("add_trip")
     data object EditTrip: Screen("edit_trip/{tripId}") {
@@ -48,7 +55,7 @@ sealed class Screen(val route: String) {
 
 val allScreens = listOf(
     Home, Screen.Trip, Screen.Community,
-    Screen.Chatbot, Screen.Account, Screen.HomeSearch, Screen.SiteDetail, Screen.Guide,
+    Screen.Chatbot, Screen.Account, Screen.HomeSearch, Screen.SiteDetail, Screen.AddReview, Screen.Guide,
     Screen.EditItinerary, Screen.DetailItinerary, Screen.AddItinerary, Screen.AddTrip, Screen.EditTrip,
     Screen.MyProfile, Screen.PasswordManager,
     Screen.CommunityDetail, Screen.AddCommunity,

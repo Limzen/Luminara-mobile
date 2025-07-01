@@ -2,6 +2,8 @@ package com.example.luminara.data.remote
 
 import com.example.luminara.data.remote.api.CommunityApi
 import com.example.luminara.data.remote.api.DirectoryApi
+import com.example.luminara.data.remote.api.ItineraryApi
+import com.example.luminara.data.remote.api.ReviewApi
 import com.example.luminara.data.remote.api.TripApi
 import com.example.luminara.data.remote.api.UserApi
 import retrofit2.Retrofit
@@ -21,5 +23,7 @@ object RetrofitInstance {
     val tripApi: TripApi by lazy { retrofit.create(TripApi::class.java)}
     val communityApi: CommunityApi by lazy { retrofit.create(CommunityApi::class.java)}
     val userApi: UserApi by lazy { retrofit.create(UserApi::class.java)}
+    val reviewApi: ReviewApi by lazy { retrofit.create(ReviewApi::class.java)}
+    val itineraryApi: ItineraryApi by lazy { retrofit.create(ItineraryApi::class.java)}
 }
 

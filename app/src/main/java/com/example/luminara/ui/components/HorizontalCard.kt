@@ -18,8 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,21 +31,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.luminara.R
 import com.example.luminara.data.model.Directory
-import com.example.luminara.navigation.Screen
-import com.example.luminara.ui.theme.Primary
 import com.example.luminara.ui.theme.YellowText
 import com.example.luminara.utils.Dimensions
 
 @Composable
-fun VerticalSitesCard(directory: Directory, onClick: () -> Unit, imageHeight: Dp) {
+fun HorizontalCard(directory: Directory, onClick: () -> Unit, imageHeight:Dp) {
     Box(
         modifier = Modifier
-            .width(imageHeight) // Change to width for vertical orientation
-            .height(imageHeight * 1.5f) // Adjust height as needed
+            .fillMaxWidth()
+            .height(imageHeight)
             .clip(RoundedCornerShape(Dimensions.BoxRadius))
             .clickable { onClick() },
     ) {
@@ -61,34 +56,39 @@ fun VerticalSitesCard(directory: Directory, onClick: () -> Unit, imageHeight: Dp
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(imageHeight * 0.65f)
                 .align(Alignment.BottomStart)
                 .background(Color.Black.copy(alpha = 0.5f))
                 .padding(horizontal = 12.dp, vertical = 12.dp)
         ) {
-            Column(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.Start
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Spacer(Modifier.weight(1f)) // Pushes  to the bottom
-                Text(
-                    directory.name,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold, color = Color.White)
-                )
-                Spacer(Modifier.height(4.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(imageVector = Icons.Outlined.Star, contentDescription = "star", tint = YellowText)
-                    Spacer(Modifier.width(2.dp))
+                Column() {
                     Text(
-                        "${directory.overallRating}",
-                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium, color = Color.White)
+                        directory.name,
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold, color = Color.White))
+                    Modifier.height(4.dp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
                     )
+                    {
+                        Icon(imageVector = Icons.Outlined.Star, contentDescription = "star", tint = YellowText)
+                        Spacer(Modifier.width(2.dp))
+                        Text(
+                            "${directory.overallRating}",
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium, color = Color.White))
+                    }
                 }
-
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = "Arrow Forward",
+                    modifier = Modifier.size(20.dp),
+                    tint = Color.White
+                )
             }
+
         }
     }
 }

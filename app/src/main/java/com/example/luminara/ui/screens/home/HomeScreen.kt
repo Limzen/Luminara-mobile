@@ -16,12 +16,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +49,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,6 +61,7 @@ import com.example.luminara.data.model.ReligionType
 import com.example.luminara.data.model.Location
 import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.HomeFilterChip
+import com.example.luminara.ui.components.HorizontalCard
 import com.example.luminara.ui.components.HorizontalSitesCard
 import com.example.luminara.ui.components.ReligionTypeChip
 import com.example.luminara.ui.components.SearchTextField
@@ -129,9 +135,10 @@ fun HomeTopBar(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 12.dp, start = Dimensions.OuterPadding, end = Dimensions.OuterPadding)
+            .padding(bottom = 12.dp)
     ) {
         TopAppBar(
+            modifier = Modifier.padding(start = Dimensions.OuterPadding, end = Dimensions.OuterPadding),
             title = {
                 currentUser?.let { user ->
                     Text(
@@ -143,9 +150,10 @@ fun HomeTopBar(
                 }
             },
             actions = {
-                IconButton(onClick = {  }) {
+               /* IconButton(onClick = {  }) {
                     Icon(Icons.Default.ArrowDropDown, contentDescription = "Lang")
                 }
+                */
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = BackgroundColor
@@ -216,7 +224,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
             item{
-                RecommendedSection()
+                RecommendedSection(navController = navController,directories = directories)
             }
             item {
                 Spacer(Modifier.height(Dimensions.TopBottomPadding))
@@ -371,7 +379,6 @@ private fun PopularSection(
     navController: NavController,
     directories: List<Directory>
 ) {
-    println("directory $directories")
     Column(
         modifier = Modifier
             .padding(horizontal = Dimensions.OuterPadding)
@@ -382,17 +389,24 @@ private fun PopularSection(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            directories.forEach { site ->
+            directories.take(6).toTypedArray().forEach { directory ->
                 item {
-                    VerticalSitesCard(navController = navController)
+                    VerticalSitesCard(directory = directory,onClick = {
+                        navController.navigate(Screen.SiteDetail.createRoute(directory.id))
+                    }, imageHeight = 180.dp)
                 }
             }
         }
     }
 }
 
+
+
 @Composable
-private fun RecommendedSection() {
+private fun RecommendedSection(
+    navController: NavController,
+    directories: List<Directory>
+) {
     Column(
         modifier = Modifier
             .padding(horizontal = Dimensions.OuterPadding)
@@ -403,8 +417,10 @@ private fun RecommendedSection() {
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            locations.forEach { site ->
-                HorizontalSitesCard()
+            directories.take(6).toTypedArray().forEach { directory ->
+                HorizontalCard(directory = directory, onClick = {
+                    navController.navigate(Screen.SiteDetail.createRoute(directory.id))
+                }, imageHeight = 180.dp)
             }
         }
     }

@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.CircleShape
@@ -12,10 +13,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
@@ -32,10 +35,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.luminara.R
+import com.example.luminara.data.model.Directory
 import com.example.luminara.ui.components.BackButton
+import com.example.luminara.ui.components.DatePickerField
 import com.example.luminara.ui.components.ItineraryTextfield
+import com.example.luminara.ui.screens.home.DirectoryViewModel
 import com.example.luminara.ui.theme.BackbuttonArrow
 import com.example.luminara.ui.theme.DarkBrown
 import com.example.luminara.ui.theme.DarkText
@@ -43,6 +50,8 @@ import com.example.luminara.ui.theme.OnPrimary
 import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
 import java.util.*
+import kotlin.collections.find
+import kotlin.collections.forEach
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,16 +61,24 @@ fun FormItinerary(
     timeInput: String,
     onTimeChange: (String) -> Unit,
     budgetInput: String,
-    onBudgetChange: (String) -> Unit
+    onBudgetChange: (String) -> Unit,
+    selectedDirectoryId: Long,
+    onSelectedDirectoryIdChange: (Long) -> Unit
 ) {
-    DestinationSection()
+    DestinationSection(selectedDirectoryId = selectedDirectoryId, onSelectedDirectoryIdChange = onSelectedDirectoryIdChange)
     DateSection(dateInput, onDateChange)
     TimeSection(timeInput, onTimeChange)
     BudgetSection(budgetInput, onBudgetChange)
 }
 
 @Composable
-private fun DestinationSection() {
+private fun DestinationSection(selectedDirectoryId : Long, onSelectedDirectoryIdChange: (Long) -> Unit) {
+    val directoryViewModel: DirectoryViewModel = viewModel()
+    val directories by directoryViewModel.directories.collectAsState()
+
+    LaunchedEffect(Unit) {
+        directoryViewModel.fetchDirectories()
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,72 +96,26 @@ private fun DestinationSection() {
             )
         }
         Spacer(Modifier.height(8.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(R.drawable.mosque1),
-                contentDescription = "Destination Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(Dimensions.BoxRadius))
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column {
-                Text("Tokyo, Tokyo", fontWeight = FontWeight.Medium)
-                Text("Jalan Medani Kecamatan Surakarta", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
-            }
-        }
+        DropdownMenuBox(
+            items = directories,
+            selectedId = selectedDirectoryId,
+            onSelectedIdChange = onSelectedDirectoryIdChange
+        )
 
     }
 }
 
 @Composable
 private fun DateSection(dateInput: String, onDateChange: (String) -> Unit) {
-    var isFocused by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Dimensions.OuterPadding, vertical = 12.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(Icons.Outlined.DateRange, contentDescription = null, tint = Color.Black)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Trip Dates",
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                color = Color.Black
-            )
-        }
-        Spacer(Modifier.height(8.dp))
-        BasicTextField(
-            value = dateInput,
-            onValueChange = onDateChange,
-            textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color.Black),
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { focusState ->
-                    isFocused = focusState.isFocused
-                },
-            singleLine = true,
-            decorationBox = { innerTextField ->
-                Column {
-                    Box(Modifier.padding(bottom = 4.dp)) {
-                        innerTextField()
-                    }
-
-                    // Underline
-                    HorizontalDivider(
-                        color = if (isFocused) DarkBrown else Color.Gray,
-                        thickness = 1.dp
-                    )
-                }
-            }
+        DatePickerField(
+            label = "Date",
+            date = dateInput,
+            onDateChange = onDateChange
         )
     }
 }
@@ -207,7 +178,7 @@ private fun BudgetSection(budgetInput: String, onBudgetChange: (String) -> Unit)
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Outlined.DateRange, contentDescription = null, tint = Color.Black)
+            Icon(Icons.Outlined.ShoppingCart, contentDescription = null, tint = Color.Black)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "Budget",
@@ -241,5 +212,39 @@ private fun BudgetSection(budgetInput: String, onBudgetChange: (String) -> Unit)
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
+    }
+}
+
+@Composable
+private fun DropdownMenuBox(
+    items: List<Directory>,
+    selectedId: Long,
+    onSelectedIdChange: (Long) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selected = items.find { it.id == selectedId }
+
+    Box {
+        OutlinedTextField(
+            value = selected?.name ?: "",
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Select Directory") },
+            modifier = Modifier.fillMaxWidth(),
+            trailingIcon = {
+                Icon(Icons.Default.ArrowDropDown, contentDescription = "Dropdown", Modifier.clickable { expanded = true })
+            }
+        )
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }, containerColor = Color.White) {
+            items.forEach { dir ->
+                DropdownMenuItem(
+                    text = { Text(dir.name) },
+                    onClick = {
+                        onSelectedIdChange(dir.id)
+                        expanded = false
+                    }
+                )
+            }
+        }
     }
 }

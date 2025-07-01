@@ -1,5 +1,6 @@
 package com.example.luminara.ui.screens.itinerary
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,6 +54,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,7 +74,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.luminara.R
 import com.example.luminara.navigation.Screen
 import com.example.luminara.ui.components.BackButton
@@ -89,7 +95,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailItinerary(
-    navController: NavController
+    navController: NavController,
+    tripId: Long
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val imageHeight = 320.dp
@@ -106,6 +113,14 @@ fun DetailItinerary(
     val scope = rememberCoroutineScope()
     var showSheet by remember { mutableStateOf(false) }
 
+    val itineraryViewModel: ItineraryViewModel = viewModel()
+    val itineraries by itineraryViewModel.itineraries.collectAsState()
+
+    LaunchedEffect(tripId) {
+        itineraryViewModel.getItineraries(tripId)
+    }
+
+    Log.d("itineraries", "$itineraries")
     TransparentStatusBarActivity()
 
     Box(
@@ -135,7 +150,7 @@ fun DetailItinerary(
                     .padding(top = 16.dp, bottom = 8.dp)
                 ) {
                     Text(
-                        text = "Medan Trip",
+                        text = "Family",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -147,7 +162,7 @@ fun DetailItinerary(
                     )
                 }
             }
-            items(5) {
+            items(itineraries) { itinerary ->
                 Card(
                     shape = RoundedCornerShape(Dimensions.BoxRadius),
                     modifier = Modifier
@@ -162,8 +177,8 @@ fun DetailItinerary(
 
                 ) {
                     Column {
-                        Image(
-                            painter = painterResource(R.drawable.mosque1),
+                        AsyncImage(
+                            model = itinerary.directory?.mainImageUrl,
                             contentDescription = "Image",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -172,7 +187,7 @@ fun DetailItinerary(
                         )
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Mosque Medan",
+                                text =  itinerary.directory?.name ?: "Directory",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -202,7 +217,7 @@ fun DetailItinerary(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(Icons.Outlined.DateRange, contentDescription = null)
                                 Text(
-                                    text = "08.00 - 09.00 AM",
+                                    text = itinerary.startTime,
                                     style = MaterialTheme.typography.bodyMedium,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
@@ -211,7 +226,7 @@ fun DetailItinerary(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(Icons.Outlined.ShoppingCart, contentDescription = null)
                                 Text(
-                                    text = "Rp 30.000",
+                                    text = "Rp ${itinerary.budget.toInt()}",
                                     style = MaterialTheme.typography.bodyMedium,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
@@ -240,7 +255,7 @@ fun DetailItinerary(
             title = {
                 AnimatedVisibility(visible = showTitle.value) {
                     Text(
-                        text = "Medan Trip",
+                        text = "Family",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -290,7 +305,7 @@ fun DetailItinerary(
 
         FloatingActionButton(
             onClick = {
-                navController.navigate(Screen.AddItinerary.route)
+                navController.navigate(Screen.AddItinerary.createRoute(tripId = tripId))
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)

@@ -110,7 +110,9 @@ fun SignUpScreen (
                     onSuccess = {
                         navController.navigate(Screen.Login.route)
                     },
-                    onError = {}
+                    onError = {
+                        navController.navigate(Screen.Login.route)
+                    }
                 )
             },
             text = "Sign Up",

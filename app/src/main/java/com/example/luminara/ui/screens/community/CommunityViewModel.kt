@@ -37,6 +37,7 @@ class CommunityViewModel: ViewModel() {
         }
     }
 
+
     fun selectCommunity(community: Community) {
         selectedCommunity = community
     }

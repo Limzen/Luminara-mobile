@@ -51,20 +51,20 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Today is a new day. It's your day. You shape it. Sign in to start managing your projects.",
+            text = "Today is a new day. It's your day. You shape it. Sign in to travel with us!.",
             style = MaterialTheme.typography.titleMedium,
         )
 
         Spacer(modifier = Modifier.height(40.dp))
 
         Text(
-            text = "Email",
+            text = "Username",
             style = MaterialTheme.typography.titleMedium
         )
         AuthTextField(
             value = email,
             onValueChange = { email = it },
-            placeholder = "Example@gmail.com",
+            placeholder = "Username",
 
         )
 
@@ -102,7 +102,9 @@ fun LoginScreen(
                     onSuccess = {
                         navController.navigate(Screen.Home.route)
                     },
-                    onError = {}
+                    onError = {
+
+                    }
                 )
 
             },

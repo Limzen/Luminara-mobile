@@ -1,54 +1,62 @@
-package com.example.luminara.ui.screens.itinerary
+package com.example.luminara.ui.screens.review
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.luminara.data.model.Review
+import com.example.luminara.data.model.Trip
+import com.example.luminara.ui.components.BottomButton
+import com.example.luminara.ui.screens.profile.UserViewModel
 import com.example.luminara.ui.theme.BackgroundColor
-import com.example.luminara.ui.theme.Primary
 import com.example.luminara.utils.Dimensions
 import com.example.luminara.utils.TransparentStatusBarActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditItinerary(
-    navController: NavController
+fun AddReviewScreen(
+    navController: NavController,
+    directoryId: Long,
+    userViewModel: UserViewModel,
 ) {
-    var date by rememberSaveable { mutableStateOf("December 12 2024") }
-    var time by rememberSaveable { mutableStateOf("16:00") }
-    var budget by rememberSaveable { mutableStateOf("30000") }
+    val reviewViewModel: ReviewViewModel = viewModel()
+    val currentUser by userViewModel.currentUser.collectAsState()
+
+
+    var reviewText by rememberSaveable { mutableStateOf("") }
+    var rating by rememberSaveable { mutableFloatStateOf(5f) }
 
     TransparentStatusBarActivity()
 
-
-    Box() {
+    Box {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -58,11 +66,11 @@ fun EditItinerary(
             TopAppBar(
                 modifier = Modifier
                     .shadow(
-                        elevation = 4.dp
+                        elevation = Dimensions.TopBarElevation
                     ),
                 title = {
                     Text(
-                        text = "Edit Itinerary",
+                        text = "Add Review",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -78,33 +86,37 @@ fun EditItinerary(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.largeTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = BackgroundColor
                 ),
             )
-            /* FormItinerary(
-                dateInput = date,
-                onDateChange = { date = it },
-                timeInput = time,
-                onTimeChange = { time = it },
-                budgetInput = budget,
-                onBudgetChange = { budget = it }
-            )
-             */
+           FormReview(
+               reviewText = reviewText,
+               onReviewTextChange = {reviewText = it},
+               rating = rating,
+               onRatingChange = {rating = it}
+           )
         }
-        Button(
-            onClick = { /* handle save */ },
-            modifier = Modifier
-                .align(Alignment.BottomCenter) // ✅ Only valid inside BoxScope
-                .fillMaxWidth()
-                .padding(horizontal = Dimensions.OuterPadding, vertical = 24.dp)
-                .navigationBarsPadding(), // prevent overlap with system nav bar
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Primary
-            )
-        ) {
-            Text("Save Itinerary", color = Color.White)
-        }
+        BottomButton(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            text = "Submit Review",
+            onClick = {
+                if (reviewText.isBlank()) {
+
+                } else {
+                    if (currentUser != null) {
+                        val review = Review(
+                            userId = currentUser!!.id,
+                            directoryId = directoryId,
+                            rating = rating,
+                            reviewText = reviewText,
+                            user = currentUser
+                        )
+                        reviewViewModel.submitReview(review = review, directoryId = directoryId)
+                        navController.popBackStack() // go back to directory detail
+                    }
+                }
+            }
+        )
     }
 }

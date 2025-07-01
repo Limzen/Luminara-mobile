@@ -202,7 +202,7 @@ private fun TripCard(
             .padding(bottom = 12.dp)
             .fillMaxWidth(),
         onClick = {
-            navController.navigate(Screen.DetailItinerary.route)
+            navController.navigate(Screen.DetailItinerary.createRoute(tripId = trip.id))
         },
         colors = CardDefaults.cardColors(
             containerColor = BackgroundColor
@@ -242,12 +242,11 @@ private fun TripCard(
                 }
             }
             Text(
-                text = "${DateUtils.formatDate(trip.startDate)} - ${DateUtils.formatDate(trip.endDate)} . ${trip.description}",
+                text = "${DateUtils.formatNormalDate(trip.startDate)} - ${DateUtils.formatNormalDate(trip.endDate)} . ${trip.description}",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
-
             Spacer(modifier = Modifier.height(12.dp))
         }
     }

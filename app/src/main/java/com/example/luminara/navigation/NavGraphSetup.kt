@@ -35,6 +35,7 @@ import com.example.luminara.ui.screens.profile.MyProfileScreen
 import com.example.luminara.ui.screens.profile.ProfileScreen
 import com.example.luminara.ui.screens.profile.UserViewModel
 import com.example.luminara.ui.screens.register.SignUpScreen
+import com.example.luminara.ui.screens.review.AddReviewScreen
 import com.example.luminara.ui.screens.trip.EditTrip
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -47,7 +48,7 @@ fun NavGraphSetup(
     val communityViewModel: CommunityViewModel = viewModel()
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = Screen.Login.route,
     ) {
         composable(Screen.Login.route) {
             LoginScreen(navController = navController, userViewModel = userViewModel)
@@ -74,6 +75,13 @@ fun NavGraphSetup(
             val id = backStackEntry.arguments?.getLong("id") ?: 0L
             SiteDetailScreen(navController = navController, id=id)
         }
+        composable(
+            route = Screen.AddReview.route,
+            arguments = listOf(navArgument("directoryId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val directoryId = backStackEntry.arguments?.getLong("directoryId") ?: 0L
+            AddReviewScreen(navController = navController, directoryId = directoryId, userViewModel = userViewModel)
+        }
         composable(Screen.Guide.route) {
             GuideScreen(navController = navController)
         }
@@ -82,11 +90,19 @@ fun NavGraphSetup(
         composable(Screen.Trip.route) {
             TripScreen(navController = navController,innerPadding = innerPadding)
         }
-        composable(Screen.DetailItinerary.route) {
-            DetailItinerary(navController = navController)
+        composable(
+            route = Screen.DetailItinerary.route,
+            arguments = listOf(navArgument("tripId") { type = NavType.LongType })
+        ) {  backStackEntry ->
+            val tripId = backStackEntry.arguments?.getLong("tripId") ?: 0L
+            DetailItinerary(navController = navController, tripId = tripId)
         }
-        composable(Screen.AddItinerary.route) {
-            AddItinerary(navController = navController)
+        composable(
+            route = Screen.AddItinerary.route,
+            arguments = listOf(navArgument("tripId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val tripId = backStackEntry.arguments?.getLong("tripId") ?: 0L
+            AddItinerary(navController = navController, tripId = tripId)
         }
         composable(Screen.EditItinerary.route) {
             EditItinerary(navController = navController)
@@ -131,16 +147,6 @@ fun NavGraphSetup(
         composable(Screen.PasswordManager.route) {
             PasswordManagerScreen(navController)
         }
-    }
-}
-
-fun NavHostController.navigateToSingleTop(screen: Screen) {
-    navigate(screen.route) {
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
     }
 }
 

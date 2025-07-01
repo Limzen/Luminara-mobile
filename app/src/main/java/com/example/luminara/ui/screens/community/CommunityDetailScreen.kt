@@ -204,11 +204,13 @@ fun CommunityDetailScreen(
                                 modifier = Modifier
                                     .padding(horizontal = Dimensions.OuterPadding)
                             ) {
-                                community.subheading.forEachIndexed { index, subheading ->
-                                    Section(
-                                        title = subheading,
-                                        content = community.content[index]
-                                    )
+                                if(community.subheading != null) {
+                                    community.subheading.forEachIndexed { index, subheading ->
+                                        Section(
+                                            title = subheading,
+                                            content = community.content[index]
+                                        )
+                                    }
                                 }
                             }
                         }
